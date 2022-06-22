@@ -35,7 +35,7 @@ end
 /-
 P3. Suppose a,b, b' ∈ ℤ. The a+b=a+b' → b=b'
 -/
-theorem left_cancel: ∀ (a b c : R), a+b=a+c → b=c := begin
+theorem left_cancel: ∀ {a b c : R}, a+b=a+c → b=c := begin
 intros a b c eq,
 rw [ ← add_zero  b],
 cases has_inv a  ,
@@ -59,9 +59,8 @@ end,
 rw mul_add at x,
 rw ←  add_zero (a*1) at x,
 have y: 0 + a*0 = 0 := begin
-rw left_cancel (a*1) (0+a*0) 0,
-rw ←  add_assoc,
-exact x,
+rw add_assoc at x,
+exact left_cancel x,
 end,
 rw comm  0(a*0) at y,
 rw add_zero at y,
@@ -71,6 +70,23 @@ end
 theorem neg_neg_a : ∀ (a : R), -(-a)=a := begin 
 sorry,
 end
+theorem dist_neg_left : ∀ (a b : R), (a)*(-b)=-(a*b) := begin 
+intros a b,
+have x: 0 = a*0 := begin
+rw mul_zero,
+end,
+rw ← add_neg b at x,
+rw mul_add at x,
+rw add_neg b at x,
+have y: a*b + (-(a*b)) = 0 := begin
+rw add_neg (a*b),
+end,
+rw ←  y at x,
+have := left_cancel x,
+symmetry,
+exact this,
+end
+
 theorem mul_neg_one : ∀ (a : R), (-1)*a=-a := begin 
 intro a,
 have x: a*0=0 := begin
@@ -85,12 +101,8 @@ rw add_neg,
 end,
 rw ← z at x,
 have z : a*(-1) = -a := begin
-
-rw  left_cancel (a) (a*(-1) ) (-a) at x,
-
--- exact x,
-sorry,
-sorry,
+exact left_cancel x,
 end,
-sorry,
+rw mul_comm,
+exact z,
 end

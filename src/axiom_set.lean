@@ -2,7 +2,9 @@ import .ring
 -- import tactic
 open ring
 variables {R : Type} [ring R]
+variables { ZZ : Type} [integers ZZ ]
 
+--  variable is_positive : ZZ → Prop
 /-
 P1. Suppor a, z ∈ ℤ. If a+z=a then z=0. So "zero"
   is uniquely defined. Similarly, "one" is uniquely
@@ -43,6 +45,21 @@ cases has_inv a  ,
 rw [←  h,←  add_assoc,comm b a,eq,comm a c,add_assoc,h,add_zero],
 end
 
+theorem right_cancel: ∀ {a b c : R}, b+a=c+a → b=c := begin
+intros a b c eq,
+rw comm at eq,
+have : c + a = a+c := begin
+rw comm,
+end,
+rw this at eq,
+have : b=c := begin
+exact left_cancel eq,
+end,
+exact this,
+-- rw [ ← add_zero  b],
+-- cases has_inv a  ,
+-- rw [←  h,←  add_assoc,comm b a,eq,comm a c,add_assoc,h,add_zero],
+end
 /-
 P4. Gvien a ∈ ℤ, let -a be the unique solution 
 x to a+x=0 (why is it unique?)
@@ -52,7 +69,7 @@ Moreover (-a)(-b) = ab
 and
 -a = (-1)*a
 -/
-lemma mul_zero : ∀ (a : R), a*0 = 0 := begin
+lemma mul_zero : ∀ {a : R}, a*0 = 0 := begin
 intros a,
 have x: a*(1+0) = a*1 := begin
 rw add_zero,
@@ -91,7 +108,7 @@ end
 theorem mul_neg_one : ∀ (a : R), (-1)*a=-a := begin 
 intro a,
 have x: a*0=0 := begin
-exact mul_zero a,
+exact mul_zero,
 end,
 rw ←  add_neg (1:R) at x,
 rw mul_add at x,
@@ -108,6 +125,26 @@ rw mul_comm,
 exact z,
 end
 
+theorem neg1_times_neg1 : (-(1 :R))*(-1) = 1 := begin
+  have x: (-1:R)*(0:R)=0 := begin
+    exact mul_zero,
+  end,
+  rw ←  add_neg (1 :R ) at x,
+  rw mul_add at x,
+  -- rw mul_comm at x,
+  rw mul_one at x,
+  rw comm at x,
+  have : (-1 :R)* (-1)  = 1 := begin
+    rw right_cancel x,
+  end,
+  exact this,
+end
 
-theorem one_pos : is_positive(1) := begin
+theorem one_pos : ¬ is_positive(-1:ZZ) := begin
+by_contradiction,
+have : is_positive (-(1:ZZ)* -1) := begin
+  exact pos_times_pos h h,
+end,
+rw neg1_times_neg1 at this,
+sorry,
 end

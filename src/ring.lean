@@ -25,11 +25,14 @@ class integers ( R  : Type) extends ring R -- :=
   -- (lt : ∀ (a : R), (∃ (b : R), is_positive ))
 variables { ZZ : Type} [integers ZZ ]
 
- variable is_positive : ZZ → Prop
+-- variable is_positive : ZZ → Prop
+def is_positive : (ZZ) → Prop := begin
+sorry,
+end
 
-axiom pos_times_pos:  ∀( a b : ZZ), is_positive a → is_positive b → is_positive (a*b)
+axiom pos_times_pos:  ∀{ a b : ZZ}, is_positive a → is_positive b → is_positive (a*b)
 axiom pos_plus_pos:  ∀( a b : ZZ), is_positive a → is_positive b → is_positive (a+b)
-axiom nontriviality:  ¬ is_positive(0)
+axiom nontriviality:  ¬ is_positive(0:ZZ)
 axiom trichotomy:  ∀( a : ZZ), xor ( xor (is_positive a) (a=0) ) (is_positive (-a))
 
 

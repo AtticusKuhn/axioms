@@ -1,7 +1,8 @@
 import .ring
 -- import tactic
--- open ring
+open ring
 variables {R : Type} [ring R]
+
 /-
 P1. Suppor a, z ∈ ℤ. If a+z=a then z=0. So "zero"
   is uniquely defined. Similarly, "one" is uniquely
@@ -105,4 +106,8 @@ exact left_cancel x,
 end,
 rw mul_comm,
 exact z,
+end
+
+
+theorem one_pos : is_positive(1) := begin
 end

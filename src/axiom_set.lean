@@ -46,19 +46,16 @@ rw [←  h,←  add_assoc,comm b a,eq,comm a c,add_assoc,h,add_zero],
 end
 
 theorem right_cancel: ∀ {a b c : R}, b+a=c+a → b=c := begin
-intros a b c eq,
-rw comm at eq,
-have : c + a = a+c := begin
-rw comm,
-end,
-rw this at eq,
-have : b=c := begin
-exact left_cancel eq,
-end,
-exact this,
--- rw [ ← add_zero  b],
--- cases has_inv a  ,
--- rw [←  h,←  add_assoc,comm b a,eq,comm a c,add_assoc,h,add_zero],
+  intros a b c eq,
+  rw comm at eq,
+  have : c + a = a+c := begin
+    rw comm,
+  end,
+  rw this at eq,
+  have : b=c := begin
+    exact left_cancel eq,
+  end,
+  exact this,
 end
 /-
 P4. Gvien a ∈ ℤ, let -a be the unique solution 
@@ -131,7 +128,6 @@ theorem neg1_times_neg1 : (-(1 :R))*(-1) = 1 := begin
   end,
   rw ←  add_neg (1 :R ) at x,
   rw mul_add at x,
-  -- rw mul_comm at x,
   rw mul_one at x,
   rw comm at x,
   have : (-1 :R)* (-1)  = 1 := begin
@@ -141,10 +137,20 @@ theorem neg1_times_neg1 : (-(1 :R))*(-1) = 1 := begin
 end
 
 theorem one_pos : ¬ is_positive(-1:ZZ) := begin
-by_contradiction,
-have : is_positive (-(1:ZZ)* -1) := begin
-  exact pos_times_pos h h,
-end,
-rw neg1_times_neg1 at this,
-sorry,
+  by_contradiction,
+  have : is_positive (-(1:ZZ)* -1) := begin
+    exact pos_times_pos h h,
+  end,
+  rw neg1_times_neg1 at this,
+  have x : xor ( xor (is_positive (-1:ZZ ) ) (-1= (0 : ZZ)) ) (is_positive (-(-1) :ZZ)) := begin
+  exact trichotomy (-1 :ZZ),
+  end,
+  rw neg_neg_a at x,
+  cases x with u p, {
+  -- right u,
+    sorry,
+  },
+ sorry,
+  -- use this at x,
+  -- sorry,
 end

@@ -11,7 +11,7 @@ class ring (R : Type) extends has_group_notation R :=
   /- anything plus zero is just itself-/
   (add_zero : ∀(a : R), a + 0 = a)
   /- addition is commutative-/
-  (comm : ∀(a b : R),  a+ b = b+ a)
+  (add_comm : ∀(a b : R),  a+ b = b+ a)
   /- multiplication distributes over addtion-/
   (mul_add : ∀(a b c : R), a * (b + c) = a * b + a * c)
   /- all numbers have an additive inverse-/

@@ -159,39 +159,90 @@ theorem neg1_times_neg1 : (-(1 :R))*(-1) = 1 := begin
   end,
   exact this,
 end
+theorem pos_diff : ∀ (a b : ZZ), is_positive (a) ∧ ¬ is_positive (b) → ¬ a=b :=
+begin
+intros a b c,
+cases c with d e,
+by_contradiction,
+rw h at d,
+apply e,
+exact d,
+-- sorry,
+end
+theorem pos_not_z : ∀ (a : ZZ), is_positive (a) → ¬ a=0 :=
+begin
+intros a b c,
+have nontriv := nontriviality,
+apply nontriv,
+rw c at b,
+exact b,
 
-theorem one_pos : ¬ is_positive(-1:ZZ) := begin
-sorry,
---   by_contradiction,
---   have : is_positive (-(1:ZZ)* -1) := begin
---     exact pos_times_pos h h,
---   end,
---   rw neg1_times_neg1 at this,
---   have x : xor ( xor (is_positive (-1:ZZ ) ) (-1= (0 : ZZ)) ) (is_positive (-(-1) :ZZ)) := begin
---   exact trichotomy (-1 :ZZ),
---   end,
---   rw neg_neg_a at x,
---   cases x with u p, {
---   -- right u,
---   cases u with r s,
---   apply s,
---   exact this,
---   },
---   cases p with gt rs,
---   -- cases rs with am pr,
--- apply rs,
--- left,
--- split,{
---   exact h,
--- },
--- intro fs,
--- -- exact rs fs,
--- apply rs,
+
+-- have werd := pos_diff (a :ZZ) 0,
 
 -- sorry,
--- apply rs,
--- exact this,
---  sorry,
-  -- use this at x,
-  -- sorry,
+-- sorry,
+-- sorry,
+-- cases c with d e,
+
+-- sorry,
+end
+theorem not_neg_one_pos : ¬ is_positive(-1:ZZ) := begin
+intros a,
+have notz := pos_not_z (-1:ZZ),
+have xf := notz a,
+have trich := trichotomy (-1:ZZ),
+have ewf := pos_times_pos a a,
+rw neg1_times_neg1 at ewf,
+cases trich with f g, {
+  cases f with d n, 
+  cases n with d s,
+  rw neg_neg_a at s,
+  apply s,
+exact ewf,
+},
+cases g with fn dw,{
+  cases fn with dj dw,
+  cases dw with dn fh,
+  rw neg_neg_a at fh,
+  apply fh,
+  exact ewf,
+-- sorry,
+},
+cases dw with fs wh,
+cases wh with od wx,
+apply fs,
+exact a,
+end
+theorem one_pos : is_positive(1:ZZ) := begin
+have ed :¬is_positive(-1:ZZ)  := begin
+exact not_neg_one_pos,
+-- sorry,
+end ,
+have trich := trichotomy (1:ZZ),
+cases trich with a b, {
+  cases a with b c,
+  cases c with d e,
+  exact b
+},
+cases b with c d, {
+  cases c with e f,
+  cases f with g h, {
+sorry,
+  },
+
+  sorry,
+  -- exfalso,
+  -- have sd: ¬ (1:ZZ)=0 := begin
+  -- have dsf := pos_not_z (1:ZZ),
+-- apply dsf,
+  end,
+  -- have ewf := pos_times_pos e e,
+
+sorry,
+},
+-- have notz := pos_not_z (-1:ZZ),
+-- have ewf := pos_times_pos ed ed,
+
+sorry,
 end

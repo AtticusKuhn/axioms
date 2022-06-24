@@ -29,6 +29,7 @@ namespace ring
   def is_positive : (ZZ) → Prop := begin
     sorry,
   end
+  -- def 
   -- def ZZ: Type extends integers ZZ := begin
   -- sorry,
   -- end
@@ -36,6 +37,10 @@ namespace ring
   axiom pos_times_pos:  ∀{ a b : ZZ}, is_positive a → is_positive b → is_positive (a*b)
   axiom pos_plus_pos:  ∀( a b : ZZ), is_positive a → is_positive b → is_positive (a+b)
   axiom nontriviality:  ¬ is_positive(0:ZZ)
-  axiom trichotomy:  ∀( a : ZZ), xor ( xor (is_positive a) (a=0) ) (is_positive (-a))
+  axiom trichotomy:  ∀( a : ZZ),
+   ( is_positive a ∧ (¬ a=0) ∧ ¬ is_positive (-a))
+   ∨  ( (¬ is_positive a) ∧  (a=0) ∧ (¬ is_positive (-a)))
+   ∨   ( ¬ is_positive a ∧ ¬ a=0 ∧  is_positive (-a))
+  --  xor ( xor (is_positive a) (a=0) ) (is_positive (-a)) ∧ xor (  (is_positive a)) (xor (a=0)  (is_positive (-a)))
 end ring
 export ring

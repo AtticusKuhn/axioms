@@ -24,7 +24,7 @@ class ring (R : Type) extends has_group_notation R :=
 
 namespace ring
   variables {R : Type} [ring R]
-  class integers ( R  : Type) extends ring R -- :=
+  class integers ( R  : Type) extends ring R, has_lt R, has_le R
   variables { ZZ : Type} [integers ZZ ]
   def is_positive : (ZZ) → Prop := begin
     sorry,
@@ -35,7 +35,7 @@ namespace ring
   -- end
   def Pos_Set: set ZZ := {z : ZZ | is_positive z } 
   axiom pos_times_pos:  ∀{ a b : ZZ}, is_positive a → is_positive b → is_positive (a*b)
-  axiom pos_plus_pos:  ∀( a b : ZZ), is_positive a → is_positive b → is_positive (a+b)
+  axiom pos_plus_pos:  ∀{ a b : ZZ}, is_positive a → is_positive b → is_positive (a+b)
   axiom nontriviality:  ¬ is_positive(0:ZZ)
   axiom nonempty_pos : ∃{a : ZZ}, is_positive a
   axiom trichotomy:  ∀( a : ZZ),
@@ -43,5 +43,7 @@ namespace ring
    ∨  ( (¬ is_positive a) ∧  (a=0) ∧ (¬ is_positive (-a)))
    ∨   ( ¬ is_positive a ∧ ¬ a=0 ∧  is_positive (-a))
   --  xor ( xor (is_positive a) (a=0) ) (is_positive (-a)) ∧ xor (  (is_positive a)) (xor (a=0)  (is_positive (-a)))
+  axiom less_than: ∀{a b : ZZ}, a < b ↔ (∃(P : ZZ), is_positive P ∧ a + P = b)  
+  axiom less_eq: ∀{a b : ZZ}, a ≤ b ↔ (a < b ∨ a = b)
 end ring
 export ring

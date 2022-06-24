@@ -148,8 +148,18 @@ theorem one_pos : ¬ is_positive(-1:ZZ) := begin
   rw neg_neg_a at x,
   cases x with u p, {
   -- right u,
-    sorry,
+  cases u with r s,
+  apply s,
+  exact this,
   },
+  cases p with gt rs,
+  -- cases rs with am pr,
+apply rs,
+left,
+split,{
+  exact h,
+},
+
  sorry,
   -- use this at x,
   -- sorry,

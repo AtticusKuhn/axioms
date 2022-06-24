@@ -37,6 +37,7 @@ namespace ring
   axiom pos_times_pos:  ∀{ a b : ZZ}, is_positive a → is_positive b → is_positive (a*b)
   axiom pos_plus_pos:  ∀( a b : ZZ), is_positive a → is_positive b → is_positive (a+b)
   axiom nontriviality:  ¬ is_positive(0:ZZ)
+  axiom nonempty_pos : ∃{a : ZZ}, is_positive a
   axiom trichotomy:  ∀( a : ZZ),
    ( is_positive a ∧ (¬ a=0) ∧ ¬ is_positive (-a))
    ∨  ( (¬ is_positive a) ∧  (a=0) ∧ (¬ is_positive (-a)))

@@ -171,43 +171,34 @@ exact d,
 end
 theorem pos_not_z : ∀ (a : ZZ), is_positive (a) → ¬ a=0 :=
 begin
-intros a b c,
-have nontriv := nontriviality,
-apply nontriv,
-rw c at b,
-exact b,
-
-
--- have werd := pos_diff (a :ZZ) 0,
-
--- sorry,
--- sorry,
--- sorry,
--- cases c with d e,
-
--- sorry,
+  intros a b c,
+  have nontriv := nontriviality,
+  apply nontriv,
+  rw c at b,
+  exact b,
 end
+
 theorem not_neg_one_pos : ¬ is_positive(-1:ZZ) := begin
-intros a,
-have notz := pos_not_z (-1:ZZ),
-have xf := notz a,
-have trich := trichotomy (-1:ZZ),
-have ewf := pos_times_pos a a,
-rw neg1_times_neg1 at ewf,
-cases trich with f g, {
-  cases f with d n, 
-  cases n with d s,
-  rw neg_neg_a at s,
-  apply s,
-exact ewf,
-},
-cases g with fn dw,{
-  cases fn with dj dw,
-  cases dw with dn fh,
-  rw neg_neg_a at fh,
-  apply fh,
+  intros a,
+  have notz := pos_not_z (-1:ZZ),
+  have xf := notz a,
+  have trich := trichotomy (-1:ZZ),
+  have ewf := pos_times_pos a a,
+  rw neg1_times_neg1 at ewf,
+  cases trich with f g, {
+    cases f with d n, 
+    cases n with d s,
+    rw neg_neg_a at s,
+    apply s,
   exact ewf,
--- sorry,
+  },
+  cases g with fn dw,{
+    cases fn with dj dw,
+    cases dw with dn fh,
+    rw neg_neg_a at fh,
+    apply fh,
+    exact ewf,
+  -- sorry,
 },
 cases dw with fs wh,
 cases wh with od wx,
@@ -215,34 +206,37 @@ apply fs,
 exact a,
 end
 theorem one_pos : is_positive(1:ZZ) := begin
-have ed :¬is_positive(-1:ZZ)  := begin
-exact not_neg_one_pos,
--- sorry,
-end ,
-have trich := trichotomy (1:ZZ),
-cases trich with a b, {
-  cases a with b c,
-  cases c with d e,
-  exact b
-},
-cases b with c d, {
-  cases c with e f,
-  cases f with g h, {
-sorry,
+  have ed : ¬is_positive(-1:ZZ) := not_neg_one_pos,
+  cases trichotomy (1:ZZ),
+  {
+    cases h with h1 h2,
+    exact h1,
   },
-
-  sorry,
-  -- exfalso,
-  -- have sd: ¬ (1:ZZ)=0 := begin
-  -- have dsf := pos_not_z (1:ZZ),
--- apply dsf,
-  end,
-  -- have ewf := pos_times_pos e e,
-
-sorry,
-},
--- have notz := pos_not_z (-1:ZZ),
--- have ewf := pos_times_pos ed ed,
-
-sorry,
+  {
+    cases h,
+    cases h with h1 h2,
+    cases h2 with h2 h3,
+    have h4 : 0 = (1 : ZZ),
+    {
+      symmetry,
+      exact h2,
+    },
+    {
+      have allzero := zero_is_one_implies_trivial h4,
+      have zeronotpos : ∃(a : ZZ), is_positive a := nonempty_pos,
+      rw h2 at h1,
+      cases zeronotpos with a q,
+      have azero := allzero a,
+      rw ← h2 at azero,
+      rw azero at q,
+      exact q,
+    },
+    {
+      cases h with h1 h2,
+      cases h2 with h2 h3,
+      exfalso,
+      apply ed,
+      exact h3,
+    },
+  }
 end

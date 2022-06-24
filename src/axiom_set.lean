@@ -161,51 +161,36 @@ theorem neg1_times_neg1 : (-(1 :R))*(-1) = 1 := begin
 end
 
 theorem one_pos : ¬ is_positive(-1:ZZ) := begin
-  by_contradiction,
-  have : is_positive (-(1:ZZ)* -1) := begin
-    exact pos_times_pos h h,
-  end,
-  rw neg1_times_neg1 at this,
-  have x : xor ( xor (is_positive (-1:ZZ ) ) (-1= (0 : ZZ)) ) (is_positive (-(-1) :ZZ)) := begin
-  exact trichotomy (-1 :ZZ),
-  end,
-  rw neg_neg_a at x,
-  cases x with u p, {
-  -- right u,
-  cases u with r s,
-  apply s,
-  exact this,
-  },
-  cases p with gt rs,
-  -- cases rs with am pr,
-apply rs,
-left,
-split,{
-  exact h,
-},
-intro fs,
--- exact rs fs,
-have : xor (is_positive (-(1:ZZ))) (-(1:ZZ) = (0:ZZ))  := begin
-
--- left,
-right,
-split, {
-  exact fs,
-  -- exact h,
-  },
-
-  -- intro alsem,
--- apply rs,
--- split,
--- by_contradiction, 
--- split,
-  -- cases rs with ghyt aer,
--- intro a at rs,
-  -- exact fs,
 sorry,
-end,
-apply rs,
-exact this,
+--   by_contradiction,
+--   have : is_positive (-(1:ZZ)* -1) := begin
+--     exact pos_times_pos h h,
+--   end,
+--   rw neg1_times_neg1 at this,
+--   have x : xor ( xor (is_positive (-1:ZZ ) ) (-1= (0 : ZZ)) ) (is_positive (-(-1) :ZZ)) := begin
+--   exact trichotomy (-1 :ZZ),
+--   end,
+--   rw neg_neg_a at x,
+--   cases x with u p, {
+--   -- right u,
+--   cases u with r s,
+--   apply s,
+--   exact this,
+--   },
+--   cases p with gt rs,
+--   -- cases rs with am pr,
+-- apply rs,
+-- left,
+-- split,{
+--   exact h,
+-- },
+-- intro fs,
+-- -- exact rs fs,
+-- apply rs,
+
+-- sorry,
+-- apply rs,
+-- exact this,
 --  sorry,
   -- use this at x,
   -- sorry,

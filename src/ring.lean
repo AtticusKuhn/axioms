@@ -1,3 +1,6 @@
+-- import data.set
+
+
 class has_group_notation (R : Type) extends has_mul R, has_add R, has_zero R, has_one R, has_neg R
 class ring (R : Type) extends has_group_notation R :=
   /- associativity of multiplication-/
@@ -26,6 +29,10 @@ namespace ring
   def is_positive : (ZZ) → Prop := begin
     sorry,
   end
+  -- def ZZ: Type extends integers ZZ := begin
+  -- sorry,
+  -- end
+  def Pos_Set: set ZZ := {z : ZZ | is_positive z } 
   axiom pos_times_pos:  ∀{ a b : ZZ}, is_positive a → is_positive b → is_positive (a*b)
   axiom pos_plus_pos:  ∀( a b : ZZ), is_positive a → is_positive b → is_positive (a+b)
   axiom nontriviality:  ¬ is_positive(0:ZZ)

@@ -153,7 +153,7 @@ theorem neg1_times_neg1 : (-(1 :R))*(-1) = 1 := begin
   rw ←  add_neg (1 :R ) at x,
   rw mul_add at x,
   rw mul_one at x,
-  rw comm at x,
+  rw add_comm at x,
   have : (-1 :R)* (-1)  = 1 := begin
     rw right_cancel x,
   end,
@@ -183,8 +183,30 @@ left,
 split,{
   exact h,
 },
+intro fs,
+-- exact rs fs,
+have : xor (is_positive (-(1:ZZ))) (-(1:ZZ) = (0:ZZ))  := begin
 
- sorry,
+-- left,
+right,
+split, {
+  exact fs,
+  -- exact h,
+  },
+
+  -- intro alsem,
+-- apply rs,
+-- split,
+-- by_contradiction, 
+-- split,
+  -- cases rs with ghyt aer,
+-- intro a at rs,
+  -- exact fs,
+sorry,
+end,
+apply rs,
+exact this,
+--  sorry,
   -- use this at x,
   -- sorry,
 end

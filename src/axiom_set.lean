@@ -340,11 +340,6 @@ begin
   rw h,
 end
 
-lemma mul_cancel : ∀{a b c : R},  a * c = b * c  → c ≠ 0 → a = b:=
-begin 
-  intros a b c d e,
-  sorry,
-end
 /-
   P9 ∀a, b ∈ ℤ, exactly one of the following is true: a < b or a = b or a > b
   in other words, the integers are a total order.
@@ -635,6 +630,7 @@ begin
     },
   },
 end 
+
 lemma rev : ∀ {P Q : Prop}, ¬ (P → Q) → (Q →  P) := begin 
 intros a b d e,
 by_contradiction,
@@ -652,48 +648,138 @@ exact b,
 end
 lemma thing : ∀ {P Q R : Prop}, (¬ P ∧  ¬ Q → ¬ R) → (R →  P ∨  Q) := begin 
   intros P Q R pqr r,
-  sorry,
+  by_cases P,
+  left,
+  exact h,
+  by_cases Q,
+  right,
+  exact h,
+  have : ¬P ∧ ¬Q,
+  split ; assumption,
+  have that := pqr this,
+  exfalso,
+  apply that,
+  exact r,
+end
+@[simp]
+lemma neg_zero : -(0 : O) = 0 := 
+begin 
+  rw ← mul_neg_one,
+  rw mul_zero,
 end
 lemma zero_or' : ∀(a b : O),   a ≠ 0 ∧  b≠ 0 → a *b≠  (0:O) :=
 begin
-intros a b c,
-cases c with d e,
-have ta := trichotomy a,
-have tb := trichotomy b,
-cases ta with s f, {
-cases tb with d g, {
-cases s with asd fsa, 
-cases d with sdd asd,
-cases asd with fds awe,
-cases fsa with sdad qwe,
-exact pos_not_zero (pos_times_pos asd sdd),
-},
-cases s with asd fdj,
-cases g with daskd weq, {
-cases daskd with das qwem,
-cases fdj with as xz,
-cases qwem with oasd we,
-exfalso,
-rw oasd at e,
-apply e,
-refl,
-},
-cases fdj with asds wqer,
-cases weq with asdd tewoirm,
-cases tewoirm with  gfs qowi,
-have := pos_not_zero (pos_times_pos asd qowi),
- rw mul_right (-1:O) at this,
-
--- cases 
-},
-
-sorry,
+  intros a b c,
+  cases c with d e,
+  have ta := trichotomy a,
+  have tb := trichotomy b,
+  cases ta with s f, {
+    cases tb with d g, {
+      cases s with asd fsa, 
+      cases d with sdd asd,
+      cases asd with fds awe,
+      cases fsa with sdad qwe,
+      exact pos_not_zero (pos_times_pos asd sdd),
+    },
+    cases s with asd fdj,
+    cases g with daskd weq, {
+      cases daskd with das qwem,
+      cases fdj with as xz,
+      cases qwem with oasd we,
+      exfalso,
+      rw oasd at e,
+      apply e,
+      refl,
+    },
+    {
+      cases fdj with asds wqer,
+      cases weq with asdd tewoirm,
+      cases tewoirm with  gfs qowi,
+      have := pos_not_zero (pos_times_pos asd qowi),
+      rw dist_neg_right at this,
+      intro h,
+      apply this,
+      have that := mul_right (-1 : O) h,
+      rw mul_comm at that,
+      rw mul_neg_one at that,
+      rw mul_comm (0 : O) (-1) at that,
+      rw mul_zero at that,
+      exact that,
+    },
+  },
+  {
+    cases f with w q,
+    {
+      cases w with junk w,
+      cases w with w junk2,
+      exfalso,
+      apply d,
+      exact w,
+    },
+    {
+      cases tb with tb1 tb2,
+      {
+        cases q with junk q,
+        cases q with junk2 negapos,
+        cases tb1 with bpos junk3,
+        have := pos_not_zero (pos_times_pos negapos bpos),
+        intro h,
+        apply this,
+        rw dist_neg_left,
+        rw h,
+        simp,
+      },
+      cases tb2 with tb2 tb3,
+      {
+        cases tb2 with junk3 tb2,
+        cases tb2 with tb2 junk4,
+        exfalso,
+        apply e,
+        exact tb2,
+      },
+      {
+        cases q with junk q,
+        cases q with junk2 negapos,
+        cases tb3 with junk3 tb3,
+        cases tb3 with junk4 negbpos,
+        have := pos_not_zero (pos_times_pos negapos negbpos),
+        rw dist_neg_both at this,
+        exact this, 
+      },
+    },
+  },
 end
 
 lemma zero_or : ∀{a b : O},  a *b= (0:O) → a=0 ∨ b=0:=
 begin 
-intros a b,
-have  x1:= zero_or' a b,
-have  x2 := thing x1,
-exact x2,
+  intros a b,
+  have  x1:= zero_or' a b,
+  have  x2 := thing x1,
+  exact x2,
+end
+lemma mul_cancel : ∀{a b c : O},  a * c = b * c  → c ≠ 0 → a = b:=
+begin 
+  intros a b c d cnotzero,
+  have start : a * 0 = 0 := by exact mul_zero,
+  rw ← add_neg c at start,
+  rw mul_add at start,
+  rw d at start,
+  rw add_neg at start,
+  rw dist_neg_right at start,
+  rw ← dist_neg_left at start,
+  rw mul_comm at start,
+  rw mul_comm (-a) c at start,
+  rw ← mul_add at start,
+  have := zero_or start,
+  cases this, {
+    exfalso,
+    apply cnotzero,
+    exact this,
+  },
+  {
+    have that := move this,
+    simp at that,
+    symmetry,
+    exact that,
+  }
 end

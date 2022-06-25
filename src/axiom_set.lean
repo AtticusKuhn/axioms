@@ -41,7 +41,8 @@ theorem left_cancel: ∀ {a b c : R}, a+b=a+c → b=c := begin
 end
 
 /- similarly, you can cancel on the right-/
-theorem right_cancel: ∀ {a b c : R}, b+a=c+a → b=c := begin
+-- @[simp]
+lemma right_cancel: ∀ {a b c : R}, b+a=c+a → b=c := begin
   intros a b c eq,
   rw add_comm at eq,
   have : c + a = a+c := begin
@@ -94,6 +95,7 @@ end
   and
   -a = (-1)*a
 -/
+@[simp]
 theorem neg_neg_a : ∀ {a : R}, -(-a)=a := begin 
   intro a,
   have na := add_neg a,
@@ -103,7 +105,8 @@ theorem neg_neg_a : ∀ {a : R}, -(-a)=a := begin
   exact right_cancel nna,
 end
 
-theorem dist_neg_left : ∀ (a b : R), (a)*(-b)=-(a*b) := begin 
+@[simp]
+theorem dist_neg_right : ∀ (a b : R), (a)*(-b)=-(a*b) := begin 
   intros a b,
   have x: 0 = a*0 := begin
   rw mul_zero,
@@ -120,6 +123,7 @@ theorem dist_neg_left : ∀ (a b : R), (a)*(-b)=-(a*b) := begin
   exact this,
 end
 
+@[simp]
 theorem mul_neg_one : ∀ (a : R), (-1)*a=-a := begin 
   intro a,
   have x: a*0=0 := begin
@@ -139,7 +143,22 @@ theorem mul_neg_one : ∀ (a : R), (-1)*a=-a := begin
   rw mul_comm,
   exact z,
   end
-
+@[simp]
+theorem dist_neg_left : ∀ (a b : R), (-a)*(b)=-(a*b) := begin 
+  intros a b,
+  rw ← mul_neg_one a,
+  rw mul_comm (-1:R) a,
+  rw mul_assoc,
+  rw  mul_neg_one b,
+  exact dist_neg_right a b,
+end
+@[simp]
+theorem dist_neg_both : ∀ (a b : R), (-a)*(-b)=(a*b) := begin 
+  intros a b,
+  rw dist_neg_left (a) (-b),
+  rw dist_neg_right (a) (b),
+  rw neg_neg_a,
+end
 theorem neg1_times_neg1 : (-(1 :R))*(-1) = 1 := begin
   have x: (-1:R)*(0:R)=0 := begin
     exact mul_zero,
@@ -288,6 +307,7 @@ begin
     }
   },
 end
+@[simp]
 lemma zero_add : ∀{a : R}, 0 + a = a :=
 begin 
   intro a,
@@ -306,6 +326,12 @@ lemma mul_right : ∀{a b : R}, ∀(c : R), a = b → a * c = b * c :=
 begin 
   intros a b c h,
   rw h,
+end
+
+lemma mul_cancel : ∀{a b c : R},  a * c = b * c  → c ≠ 0 → a= b:=
+begin 
+  intros a b c d e,
+  sorry,
 end
 /-
   P9 ∀a, b ∈ ℤ, exactly one of the following is true: a < b or a = b or a > b
@@ -596,3 +622,64 @@ begin
     },
   },
 end 
+lemma rev : ∀ {P Q : Prop}, ¬ (P → Q) → (Q →  P) := begin 
+intros a b d e,
+by_contradiction,
+apply d,
+intro f,
+exact e,
+end
+lemma pos_not_zero: ∀ {a : ZZ}, is_positive a → a ≠ 0 := begin
+intros a b,
+by_contradiction,
+rw h at b,
+have := nontriviality,
+apply this,
+exact b,
+end
+lemma thing : ∀ {P Q R : Prop}, (¬ P ∧  ¬ Q → ¬ R) → (R →   P ∨  Q) := begin 
+sorry,
+end
+lemma zero_or' : ∀(a b : ZZ),   a ≠ 0 ∧  b≠ 0 → a *b≠  (0:ZZ) :=
+begin
+intros a b c,
+cases c with d e,
+have ta := trichotomy a,
+have tb := trichotomy b,
+cases ta with s f, {
+cases tb with d g, {
+cases s with asd fsa, 
+cases d with sdd asd,
+cases asd with fds awe,
+cases fsa with sdad qwe,
+exact pos_not_zero (pos_times_pos asd sdd),
+},
+cases s with asd fdj,
+cases g with daskd weq, {
+cases daskd with das qwem,
+cases fdj with as xz,
+cases qwem with oasd we,
+exfalso,
+rw oasd at e,
+apply e,
+refl,
+},
+cases fdj with asds wqer,
+cases weq with asdd tewoirm,
+cases tewoirm with  gfs qowi,
+have := pos_not_zero (pos_times_pos asd qowi),
+ rw mul_right (-1:ZZ) at this,
+
+-- cases 
+},
+
+sorry,
+end
+
+lemma zero_or : ∀{a b : ZZ},  a *b= (0:ZZ) → a=0 ∨ b=0:=
+begin 
+intros a b,
+have  x1:= zero_or' a b,
+have  x2 := thing x1,
+exact x2,
+end

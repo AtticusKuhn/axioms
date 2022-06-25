@@ -40,9 +40,9 @@ namespace ring
   axiom nonempty_pos : ∃{a : O}, is_positive a
   /- One of the following is true: a is positive, a = 0, or -a is positive -/
   axiom trichotomy:  ∀( a : O),
-   ( is_positive a ∧ (¬ a=0) ∧ ¬ is_positive (-a))
+   ( is_positive a ∧ (a ≠ 0) ∧ ¬ is_positive (-a))
    ∨  ( (¬ is_positive a) ∧  (a=0) ∧ (¬ is_positive (-a)))
-   ∨   ( ¬ is_positive a ∧ ¬ a=0 ∧  is_positive (-a))
+   ∨   ( ¬ is_positive a ∧ a≠ 0 ∧  is_positive (-a))
   /- a < b iff ∃p positive, such that b = a + p -/
   axiom less_than: ∀{a b : O}, a < b ↔ (∃(P : O), is_positive P ∧ a + P = b) 
   /- a ≤ b iff a < b or a = b -/ 

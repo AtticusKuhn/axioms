@@ -320,12 +320,14 @@ begin
   },
 end
 @[simp]
+/- 0 + something = something -/
 lemma zero_add : ∀{a : R}, 0 + a = a :=
 begin 
   intro a,
   rw add_comm,
   rw add_zero,
 end
+/- move stuff across the equal sign-/
 lemma move : ∀{a b c: R}, a + b = c → a = c + (-b) :=
 begin 
   intros a b c h,
@@ -334,6 +336,7 @@ begin
   rw add_neg,
   rw add_zero,
 end
+/- you can multiply by stuff on the right-/
 lemma mul_right : ∀{a b : R}, ∀(c : R), a = b → a * c = b * c :=
 begin 
   intros a b c h,
@@ -546,6 +549,7 @@ begin
     },
   },
 end
+
 theorem mul_le_mul : ∀{a b x y : O}, is_positive a → is_positive x → a ≤ b → x ≤ y → a * x ≤ b * y :=
 begin 
   intros a b x y ap xp ab xy,
@@ -630,25 +634,19 @@ begin
     },
   },
 end 
-
-lemma rev : ∀ {P Q : Prop}, ¬ (P → Q) → (Q →  P) := begin 
-intros a b d e,
-by_contradiction,
-apply d,
-intro f,
-exact e,
-end
+/- If a is positive then it isn't zero -/
 lemma pos_not_zero: ∀ {a : O}, is_positive a → a ≠ 0 := begin
-intros a b,
-by_contradiction,
-rw h at b,
-have := nontriviality,
-apply this,
-exact b,
+  intros a b,
+  by_contradiction,
+  rw h at b,
+  have := nontriviality,
+  apply this,
+  exact b,
 end
+/- modus tollens + demorgans law-/
 lemma thing : ∀ {P Q R : Prop}, (¬ P ∧  ¬ Q → ¬ R) → (R →  P ∨  Q) := begin 
   intros P Q R pqr r,
-  by_cases P,
+  by_cases P, --classical logic
   left,
   exact h,
   by_cases Q,
@@ -662,12 +660,18 @@ lemma thing : ∀ {P Q R : Prop}, (¬ P ∧  ¬ Q → ¬ R) → (R →  P ∨  Q
   exact r,
 end
 @[simp]
+/- -0 = 0-/
 lemma neg_zero : -(0 : O) = 0 := 
 begin 
   rw ← mul_neg_one,
   rw mul_zero,
 end
-lemma zero_or' : ∀(a b : O),   a ≠ 0 ∧  b≠ 0 → a *b≠  (0:O) :=
+/- 
+  P6: SALVAGE: In an ordered ring:  ab = 0 → a = 0 or b = 0
+  we proved the contrapositive because it was easier and a constructive proof
+  the lemma "thing" was used to recover the original version
+-/
+lemma zero_or' : ∀(a b : O),   a ≠ 0 ∧  b ≠ 0 → a *b ≠  (0:O) :=
 begin
   intros a b c,
   cases c with d e,
@@ -749,7 +753,7 @@ begin
     },
   },
 end
-
+/- The actually useful version of the lemma -/
 lemma zero_or : ∀{a b : O},  a *b= (0:O) → a=0 ∨ b=0:=
 begin 
   intros a b,
@@ -757,7 +761,11 @@ begin
   have  x2 := thing x1,
   exact x2,
 end
-lemma mul_cancel : ∀{a b c : O},  a * c = b * c  → c ≠ 0 → a = b:=
+/-
+  P6: SALVAGE : In an ordered ring you can cancel multiplication,
+  in other words: if c ≠ 0 and a * c = b * c, then a = b
+-/
+theorem mul_cancel : ∀{a b c : O},  a * c = b * c  → c ≠ 0 → a = b:=
 begin 
   intros a b c d cnotzero,
   have start : a * 0 = 0 := by exact mul_zero,
@@ -783,3 +791,4 @@ begin
     exact that,
   }
 end
+/- P5: Subtraction is associative: WRONG and UNSALVEAGEABLE -/

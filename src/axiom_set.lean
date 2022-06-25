@@ -791,4 +791,4 @@ begin
     exact that,
   }
 end
-/- P5: Subtraction is associative: WRONG and UNSALVEAGEABLE -/
+/- P5: Subtraction is associative: WRONG and UNSALVAGEABLE -/

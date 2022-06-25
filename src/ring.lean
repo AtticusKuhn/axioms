@@ -30,17 +30,22 @@ namespace ring
   def is_positive : (O) → Prop := begin
     sorry,
   end
-  def Pos_Set: set O := {z : O | is_positive z } 
+  /- The positives are closed under multiplication -/
   axiom pos_times_pos:  ∀{ a b : O}, is_positive a → is_positive b → is_positive (a*b)
+  /- The positives are closed under addition -/
   axiom pos_plus_pos:  ∀{ a b : O}, is_positive a → is_positive b → is_positive (a+b)
+  /- The trivial ring is not ordered -/
   axiom nontriviality:  ¬ is_positive(0:O)
+  /- At leaset one element of the ring is positive -/
   axiom nonempty_pos : ∃{a : O}, is_positive a
+  /- One of the following is true: a is positive, a = 0, or -a is positive -/
   axiom trichotomy:  ∀( a : O),
    ( is_positive a ∧ (¬ a=0) ∧ ¬ is_positive (-a))
    ∨  ( (¬ is_positive a) ∧  (a=0) ∧ (¬ is_positive (-a)))
    ∨   ( ¬ is_positive a ∧ ¬ a=0 ∧  is_positive (-a))
-  --  xor ( xor (is_positive a) (a=0) ) (is_positive (-a)) ∧ xor (  (is_positive a)) (xor (a=0)  (is_positive (-a)))
-  axiom less_than: ∀{a b : O}, a < b ↔ (∃(P : O), is_positive P ∧ a + P = b)  
+  /- a < b iff ∃p positive, such that b = a + p -/
+  axiom less_than: ∀{a b : O}, a < b ↔ (∃(P : O), is_positive P ∧ a + P = b) 
+  /- a ≤ b iff a < b or a = b -/ 
   axiom less_eq: ∀{a b : O}, a ≤ b ↔ (a < b ∨ a = b)
 end ring
 export ring

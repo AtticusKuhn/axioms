@@ -2,9 +2,9 @@ import .ring
 -- import tactic
 open ring
 variables {R : Type} [ring R]
-variables { ZZ : Type} [integers ZZ ]
+variables {O : Type} [ordered_ring O ]
 
---  variable is_positive : ZZ → Prop
+--  variable is_positive : O → Prop
 /-
 P1. Suppose a, z ∈ ℤ. If a+z=a then z=0. So "zero"
   is uniquely defined. Similarly, "one" is uniquely
@@ -55,7 +55,7 @@ lemma right_cancel: ∀ {a b c : R}, b+a=c+a → b=c := begin
   exact this,
 end
 
-/- anything times zero is zero-/
+/- anything times zero is zero -/
 lemma mul_zero : ∀{a : R}, a * 0 = 0 :=
 begin 
   intro a,
@@ -84,7 +84,6 @@ begin
   symmetry,
   exact q,
 end
-
 
 /-
   P4. Gvien a ∈ ℤ, let -a be the unique solution 
@@ -176,7 +175,11 @@ end
   P7
   1 ∈ P and -1 ∉ P
 -/
-theorem pos_diff : ∀ (a b : ZZ), is_positive (a) ∧ ¬ is_positive (b) → ¬ a=b :=
+
+/-
+  lemma: if a is positive and b is not positive then a is not b
+-/
+lemma pos_diff : ∀ (a b : O), is_positive (a) ∧ ¬ is_positive (b) → ¬ a=b :=
 begin
   intros a b c,
   cases c with d e,
@@ -185,7 +188,10 @@ begin
   apply e,
   exact d,
 end
-theorem pos_not_z : ∀ (a : ZZ), is_positive (a) → ¬ a=0 :=
+/-
+  lemma: if a is positive then a is not 0
+-/
+lemma pos_not_z : ∀ (a : O), is_positive (a) → ¬ a=0 :=
 begin
   intros a b c,
   have nontriv := nontriviality,
@@ -194,11 +200,14 @@ begin
   exact b,
 end
 
-theorem not_neg_one_pos : ¬ is_positive(-1:ZZ) := begin
+/-
+  -1 ∉ P : in other words, -1 is not positive 
+-/
+theorem not_neg_one_pos : ¬ is_positive(-1:O) := begin
   intros a,
-  have notz := pos_not_z (-1:ZZ),
+  have notz := pos_not_z (-1:O),
   have xf := notz a,
-  have trich := trichotomy (-1:ZZ),
+  have trich := trichotomy (-1:O),
   have ewf := pos_times_pos a a,
   rw neg1_times_neg1 at ewf,
   cases trich with f g, {
@@ -206,7 +215,7 @@ theorem not_neg_one_pos : ¬ is_positive(-1:ZZ) := begin
     cases n with d s,
     rw neg_neg_a at s,
     apply s,
-  exact ewf,
+    exact ewf,
   },
   cases g with fn dw,{
     cases fn with dj dw,
@@ -220,9 +229,12 @@ theorem not_neg_one_pos : ¬ is_positive(-1:ZZ) := begin
   apply fs,
   exact a,
 end
-theorem one_pos : is_positive(1:ZZ) := begin
-  have ed : ¬is_positive(-1:ZZ) := not_neg_one_pos,
-  cases trichotomy (1:ZZ),
+/-
+  1 ∈ P : in other words 1 is positive
+-/
+theorem one_pos : is_positive(1:O) := begin
+  have ed : ¬is_positive(-1:O) := not_neg_one_pos,
+  cases trichotomy (1:O),
   {
     cases h with h1 h2,
     exact h1,
@@ -231,14 +243,14 @@ theorem one_pos : is_positive(1:ZZ) := begin
     cases h,
     cases h with h1 h2,
     cases h2 with h2 h3,
-    have h4 : 0 = (1 : ZZ),
+    have h4 : 0 = (1 : O),
     {
       symmetry,
       exact h2,
     },
     {
       have allzero := zero_is_one_implies_trivial h4,
-      have zeronotpos : ∃(a : ZZ), is_positive a := nonempty_pos,
+      have zeronotpos : ∃(a : O), is_positive a := nonempty_pos,
       rw h2 at h1,
       cases zeronotpos with a q,
       have azero := allzero a,
@@ -259,7 +271,7 @@ end
 /-
   P8 Prove the transitivity of ≤ 
 -/
-theorem trans_le : ∀{a b c : ZZ}, a ≤ b → b ≤ c → a ≤ c :=
+theorem trans_le : ∀{a b c : O}, a ≤ b → b ≤ c → a ≤ c :=
 begin 
   intros a b c ab bc,
   rw less_eq at ab,
@@ -328,15 +340,16 @@ begin
   rw h,
 end
 
-lemma mul_cancel : ∀{a b c : R},  a * c = b * c  → c ≠ 0 → a= b:=
+lemma mul_cancel : ∀{a b c : R},  a * c = b * c  → c ≠ 0 → a = b:=
 begin 
   intros a b c d e,
   sorry,
 end
 /-
   P9 ∀a, b ∈ ℤ, exactly one of the following is true: a < b or a = b or a > b
+  in other words, the integers are a total order.
 -/
-theorem trichotomy_lt : ∀(a b : ZZ), 
+theorem trichotomy_lt : ∀(a b : O), 
   (a < b ∧ a ≠ b ∧ ¬(b < a)) ∨ 
   (¬(a < b) ∧ a = b ∧ ¬(b < a)) ∨
   (¬(a < b) ∧ a ≠ b ∧ (b < a)) :=
@@ -468,9 +481,9 @@ end
 /-
   P10
   ∀a, b, x, y ∈ ℤ, a ≤ b and x ≤ y → a + x ≤ b + y
-  and SALVAGE a ≤ b and x ≤ y and a, x ∈ P implies a*x ≤ b*y
+  and SALVAGE a ≤ b and x ≤ y and a, x ∈ P implies a * x ≤ b * y
 -/
-theorem add_le_add: ∀{a b x y : ZZ}, a ≤ b → x ≤ y → a + x ≤ b + y :=
+theorem add_le_add: ∀{a b x y : O}, a ≤ b → x ≤ y → a + x ≤ b + y :=
 begin 
   intros a b x y ab xy,
   rw less_eq,
@@ -538,7 +551,7 @@ begin
     },
   },
 end
-theorem mul_le_mul : ∀{a b x y : ZZ}, is_positive a → is_positive x → a ≤ b → x ≤ y → a * x ≤ b * y :=
+theorem mul_le_mul : ∀{a b x y : O}, is_positive a → is_positive x → a ≤ b → x ≤ y → a * x ≤ b * y :=
 begin 
   intros a b x y ap xp ab xy,
   rw less_eq,
@@ -629,7 +642,7 @@ apply d,
 intro f,
 exact e,
 end
-lemma pos_not_zero: ∀ {a : ZZ}, is_positive a → a ≠ 0 := begin
+lemma pos_not_zero: ∀ {a : O}, is_positive a → a ≠ 0 := begin
 intros a b,
 by_contradiction,
 rw h at b,
@@ -637,10 +650,11 @@ have := nontriviality,
 apply this,
 exact b,
 end
-lemma thing : ∀ {P Q R : Prop}, (¬ P ∧  ¬ Q → ¬ R) → (R →   P ∨  Q) := begin 
-sorry,
+lemma thing : ∀ {P Q R : Prop}, (¬ P ∧  ¬ Q → ¬ R) → (R →  P ∨  Q) := begin 
+  intros P Q R pqr r,
+  sorry,
 end
-lemma zero_or' : ∀(a b : ZZ),   a ≠ 0 ∧  b≠ 0 → a *b≠  (0:ZZ) :=
+lemma zero_or' : ∀(a b : O),   a ≠ 0 ∧  b≠ 0 → a *b≠  (0:O) :=
 begin
 intros a b c,
 cases c with d e,
@@ -668,7 +682,7 @@ cases fdj with asds wqer,
 cases weq with asdd tewoirm,
 cases tewoirm with  gfs qowi,
 have := pos_not_zero (pos_times_pos asd qowi),
- rw mul_right (-1:ZZ) at this,
+ rw mul_right (-1:O) at this,
 
 -- cases 
 },
@@ -676,7 +690,7 @@ have := pos_not_zero (pos_times_pos asd qowi),
 sorry,
 end
 
-lemma zero_or : ∀{a b : ZZ},  a *b= (0:ZZ) → a=0 ∨ b=0:=
+lemma zero_or : ∀{a b : O},  a *b= (0:O) → a=0 ∨ b=0:=
 begin 
 intros a b,
 have  x1:= zero_or' a b,

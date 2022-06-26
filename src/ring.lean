@@ -1,7 +1,7 @@
 -- import data.set
 
 
-class has_group_notation (R : Type) extends has_mul R, has_add R, has_zero R, has_one R, has_neg R
+class has_group_notation (R : Type) extends has_mul R, has_add R, has_zero R, has_one R, has_neg R, has_dvd R
 class ring (R : Type) extends has_group_notation R :=
   /- associativity of multiplication-/
   (mul_assoc : ∀ (a b c : R), a * b * c = a * (b * c))
@@ -19,9 +19,12 @@ class ring (R : Type) extends has_group_notation R :=
   (mul_add : ∀(a b c : R), a * (b + c) = a * b + a * c)
   /- all numbers have an additive inverse-/
   (has_inv : ∀(a : R), ∃(x : R), a + x = 0)
+  (divs : ∀(a b :R), a ∣ b ↔ (∃ (c:R), a*c=b))
   /- -a is the inverse of a-/
   (add_neg : ∀(a : R), a + -a = 0)
+  -- (exp : ∀(a : R)( r: ℕ ), a^r = a*a^(r-1))
 
+ 
 namespace ring
   variables {R : Type} [ring R]
   class ordered_ring (R  : Type) extends ring R, has_lt R, has_le R

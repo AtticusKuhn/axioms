@@ -28,7 +28,19 @@ class ring (R : Type) extends has_group_notation R :=
 namespace ring
   variables {R : Type} [ring R]
   class ordered_ring (R  : Type) extends ring R, has_lt R, has_le R
+  class Integers (ZZ  : Type) extends   ordered_ring ZZ :=
+    (WOP : ∀(proposition : ZZ → Prop), 
+    (∃ (some:ZZ), 
+    proposition(some) → (
+      ∃(minimal : ZZ), 
+      ∀(other:ZZ), 
+      proposition(other)→ minimal ≤ other
+    )))
+
+
   variables { O : Type} [ordered_ring O ]
+  variables { ZZ : Type} [Integers ZZ ]
+
   /-hacky way to define propositions as a black box -/
   def is_positive : (O) → Prop := begin
     sorry,
@@ -50,5 +62,13 @@ namespace ring
   axiom less_than: ∀{a b : O}, a < b ↔ (∃(P : O), is_positive P ∧ a + P = b) 
   /- a ≤ b iff a < b or a = b -/ 
   axiom less_eq: ∀{a b : O}, a ≤ b ↔ (a < b ∨ a = b)
+
+ def gcd : ZZ → ZZ → ZZ := begin
+    sorry,
+  end
+  axiom gcd_def : ∀( a b c: ZZ), 
+  gcd a b=c ↔ c ∣ a ∧ c ∣ b 
+  ∧ (∀(d:ZZ), d ∣ a ∧ d ∣  b → d ≤ c)
+  export Integers
 end ring
 export ring

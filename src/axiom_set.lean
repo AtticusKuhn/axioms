@@ -549,7 +549,56 @@ begin
     },
   },
 end
+@[simp]
+theorem one_mul: ∀ (a :R), 1*a=a := begin
+intro a,
+rw mul_comm,
+exact mul_one a,
+end
+theorem no_lt_self: ∀ (a:O), ¬  (a  <a) := begin
+intros a b,
+rw less_than at b,
+cases b, 
+cases b_h,
+rw ← add_zero (a)  at b_h_right,
+rw add_assoc at b_h_right,
+have := left_cancel b_h_right,
+rw zero_add at this,
+rw this at b_h_left,
+have := nontriviality,
+apply this,
+exact b_h_left,
+end
+theorem mul_le :∀ (a b c :O), is_positive c → a < b → a*c < b*c := begin
+intros a b c pc alb ,
+rw less_than,
+rw less_than at alb,
+cases alb, 
+ cases alb_h,
+  have := mul_right c alb_h_right,
+    rw mul_comm at this,
+    rw mul_add at this,
 
+split, {
+  split, {
+
+--  cases alb_h,
+
+--   
+--     -- split, {
+      exact pos_times_pos pc alb_h_left,
+--     -- },
+-- sorry,
+  },
+  rw mul_comm at this,
+  exact this,
+  --  cases alb_h,
+
+
+ 
+},
+-- sorry,
+end 
 theorem mul_le_mul : ∀{a b x y : O}, is_positive a → is_positive x → a ≤ b → x ≤ y → a * x ≤ b * y :=
 begin 
   intros a b x y ap xp ab xy,
@@ -634,6 +683,23 @@ begin
     },
   },
 end 
+
+theorem le_all: ∀(a :O), a ≤ a := begin
+intro a,
+rw less_eq,
+right,
+refl,
+end
+theorem mul_lt_mul : ∀{a b x y : O}, 
+  is_positive a → 
+  is_positive x → 
+  a < b → 
+  x < y → 
+  a * x < b * y :=
+begin
+ sorry,
+end
+
 /- If a is positive then it isn't zero -/
 lemma pos_not_zero: ∀ {a : O}, is_positive a → a ≠ 0 := begin
   intros a b,

@@ -32,6 +32,29 @@ theorem WOP_Contradiction:
   -- have mins := wop_h (h),
   sorry,
 end 
+theorem pos_is_g0: ∀ (x:O), is_positive x ↔ 0< x := begin
+intros a,
+split, {
+intros pa,
+rw less_than,
+split,{
+split, {
+exact pa,
+},
+rw zero_add,
+},
+},
+intros la,
+rw less_than at la,
+cases la, {
+cases la_h, {
+rw zero_add at la_h_right,
+rw  la_h_right at la_h_left,
+exact la_h_left,
+},
+},
+end
+
 
 theorem Euclidean_Algorithm_Exists: ∀ (a b: ZZ), ∃ (q r :ZZ), a=b*q+r := begin
 intros a b,
@@ -46,6 +69,109 @@ split, {
 },
 end
 
+def nibzo : ZZ → Prop := λ x, 0<x ∧ x < 1
+
+theorem bruh: ∀ (a: O), 0 <a → 0 < a*a := begin
+intros a ag0,
+rw less_than at ag0,
+cases ag0 with p pos,
+cases pos with ppos pea,
+rw less_than,
+have pspos := pos_times_pos ppos ppos,
+
+split, {
+split, {
+exact pspos,
+},
+rw zero_add,
+rw zero_add at pea,
+rw pea,
+},
+
+end  
+
+theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
+--  have 
+ have wop_on_nibzo := explicit_WOP  nibzo , {
+intros contradict,
+cases wop_on_nibzo,
+cases contradict,
+have same : wop_on_nibzo_w = contradict_w := begin
+sorry,
+ end,
+ rw ←  same at contradict_h,
+ have has_min := wop_on_nibzo_h contradict_h,
+ cases has_min with  min others,
+ have x : 0 < min ∧ min < 1,{
+
+    cases others with nibzo_min, 
+    change (0 < min ∧ min < 1) at nibzo_min,
+    exact nibzo_min,
+    -- sorry,
+  },
+  cases x with x1 x2,
+  -- sorry,
+  have x : 0 < min*min := begin
+    exact bruh min x1,
+  end,
+  have minpos: is_positive min := begin
+  rw ← pos_is_g0 at x1,
+  exact x1,
+-- exact  pos_is_g0 (x1),
+  end,
+  have xle1 : min ≤ 1 := begin
+  rw less_eq,
+  left,
+  exact x2,
+  end,
+   have xother :  min*min < 1 := begin
+   sorry,
+    -- exact mul_le_mul (minpos) (minpos) (xle1) (xle1) ,
+  end,
+  have smaller: min*min < min := begin
+   have minthing := mul_le min 1 min minpos x2 ,
+  --  rw ← mul_comm at minthing,
+   simp at minthing,
+   exact minthing,
+  --  rw mul_one at brere,
+  end,
+  cases others,
+  have nibzominmin : nibzo (min*min) := begin
+    change (0 < min*min ∧ min*min < 1),
+    split, {
+exact x,
+    },
+    exact xother
+  end,
+  have asdasd := others_right (min*min) nibzominmin,
+rw less_eq at asdasd,
+cases asdasd, {
+--  have qwerqe := trichotomy_lt (min) (min*min),
+sorry,
+},
+rw ←  asdasd at smaller,
+
+
+
+-- have :=  wop_on_nibzo_h contradict_h,
+
+-- rw wop_on_nibzo at contradict,
+-- have := wop_on_nibzo contradict,
+--    cases this, {
+-- cases h, {
+--   have x : this_w = h_w := begin
+--   end,
+-- have x  := this_h h_h,
+-- },
+--    },
+--  have x := this h,
+
+sorry,
+ },
+
+ sorry,
+end
+
 theorem Contra_Euclidean_Algorithm_One_Step:∃ (a b: ZZ), ¬ ( ∀ (q r :ZZ), (a=b*q+r)→  r > b) := begin
 let euclidean : ZZ → Prop := λ a, ∀ (b:ZZ), ¬∀ (  q r : ZZ), a = b * q + r →  r > b,
 have := WOP_Contradiction (euclidean) ,
@@ -53,14 +179,15 @@ have thing :(∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬euclidean minimal → ¬e
 intros minimal,
 split, {
   intros em,
-  change (¬euclidean minimal) with (∀ (a b q r :ZZ), (a=b*q+r)→  r > b) at  em,
+  -- change (¬euclidean minimal) with (∀ (a b q r :ZZ), (a=b*q+r)→  r > b) at  em,
   -- rw euclidean at em,
 sorry,
 },
 sorry,
 end,
  have that := this thing,
-exact that,
+ sorry,
+-- exact that,
 
 end
 

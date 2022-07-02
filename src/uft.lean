@@ -333,7 +333,32 @@ end
 @[simp]
 theorem lt_cancel: ∀(a b c: O), c+a < c+b ↔ a < b:=
 begin
-sorry,
+  intros a b c,
+  split,
+  {
+    intro h,
+    rw less_than at h,
+    cases h with P q,
+    cases q with Ppos s,
+    rw add_assoc at s,
+    have := left_cancel s,
+    rw less_than,
+    split,
+    split,
+    exact Ppos,
+    exact this,
+  },
+  {
+    intro ab,
+    rw less_than at ab,
+    cases ab with P,
+    cases ab_h with Ppos h,
+    rw less_than,
+    split, split,
+    exact Ppos,
+    rw ← h,
+    rw add_assoc,
+  }
 end
 @[simp]
 theorem neg_comp: ∀(a b: O), -a < -b ↔ b < a:=

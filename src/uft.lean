@@ -769,9 +769,10 @@ intros a b a_positive b_positive,
   split, {
     split, {
         have final:a * x' + b * y' = d  := begin
-       rw min_eq_d,
-        sorry,
+       rw ← min_eq_d,
+       exact rest,
         end,
+        have same: gcd a b =d, {refl},
       sorry,
     },
     sorry,

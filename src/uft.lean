@@ -444,6 +444,20 @@ rw add_comm (-w) w,
 rw add_neg,
 rw add_zero,
 end
+theorem demorgan: ∀(p q :Prop), ¬(p ∨ q ) → (¬ p ∧ ¬ q) := begin
+intros p q n_p_or_q,
+split, {
+
+by_contradiction,
+apply n_p_or_q,
+left,
+exact h,
+},
+by_contradiction,
+apply n_p_or_q,
+right,
+exact h,
+end
 theorem not_le_iff_ge: ∀(a b: O), a < b ↔ ¬ (b ≤  a):=
 begin
 intros a b,
@@ -462,9 +476,24 @@ split, {
 },
 intro n_b_le_a,
 rw less_eq at n_b_le_a,
--- rw push_and at n_b_le_a,
+have dm := demorgan (b<a) (b=a) n_b_le_a,
+cases dm with n_b_le_a n_b_eq_a,
+-- rw demorgan at n_b_le_a,
 have trich := trichotomy_lt a b,
-sorry,
+rcases trich with ⟨s,d,f⟩, {
+exact s,
+},
+rcases trich with ⟨s,d,f⟩, {
+exfalso,
+apply  n_b_eq_a,
+symmetry,
+exact d,
+},
+rcases trich with ⟨s,d,f⟩, {
+  exfalso,
+  apply n_b_le_a,
+  exact f,
+},
 end
 
 

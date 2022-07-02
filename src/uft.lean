@@ -599,7 +599,23 @@ intros a b a_positive b_positive,
 sorry,
   },
   have min_eq_d: min = d, {
-sorry,
+    rw less_eq at d_le_min,
+    rw less_eq at  min_le_d,
+    cases d_le_min, {
+      cases min_le_d, {
+        have tr := trans_lt d_le_min min_le_d,
+        exfalso,
+        apply no_lt_self d,
+        exact tr,
+        -- sorry,
+      },
+      rw ← min_le_d at d_le_min,
+       exfalso,
+        apply no_lt_self min,
+        exact d_le_min,
+    },
+    symmetry,
+    exact d_le_min,
   },
   -- split,{
   --   split, {

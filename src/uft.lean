@@ -538,14 +538,18 @@ intros a b a_positive b_positive,
 
     sorry,
   },
+  have r_lt_min: r < min, {
+sorry,
+  },
   have rnotpos: ¬ (is_positive r), {
-    by_contradiction,
+    intro h,
     -- rw pos_is_g0 r at h,
     sorry,
   },
   have r_is_0: r=0, {
-
+    sorry,
   },
+
   -- have thing3 : r= a - a*x' - b*y'*q, {
   --   rw subtr at thing2,
   --   rw dist_neg_add at thing2,

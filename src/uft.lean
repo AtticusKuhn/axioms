@@ -34,10 +34,15 @@ theorem WOP_Contradiction:
 end 
 theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
   intros a b a_pos b_pos a_div_b,
-  have p_pos : is_positive  := pos_div_pos
+  rw divs at a_div_b,
+  cases a_div_b,{
+ have p_pos : is_positive p := pos_div_pos a b
 have eq : p*(a-1) +p = b,{
 
 },
+    sorry,
+  },
+ 
 end
 theorem pos_is_g0: ∀ (x:O), is_positive x ↔ 0< x := begin
 intros a,
@@ -715,7 +720,7 @@ intros a b a_positive b_positive,
     sorry,
   },
   have d_le_min: d ≤ min, {
-    sorry,
+     exact divs_le d min d_div,
   },
   have min_le_d: min ≤ d, {
     sorry,

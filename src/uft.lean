@@ -727,7 +727,10 @@ intros a b a_positive b_positive,
   have d_div_min: d ∣ min, {
     sorry,
   },
-  -- have d_pos: is_positive
+  have d_pos: is_positive d := begin
+    
+    sorry,
+  end,
   have d_le_min: d ≤ min, {
     --  exact divs_le d min  d_div,
   },

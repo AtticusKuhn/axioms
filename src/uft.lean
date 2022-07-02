@@ -574,9 +574,10 @@ intros a b a_positive b_positive,
         apply no_lt_self r,
         exact t,
       },
+      exact les,
     },
-    
-    sorry,
+    symmetry,
+    exact zero_le_r,
   },
 
   -- have thing3 : r= a - a*x' - b*y'*q, {

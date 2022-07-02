@@ -534,7 +534,9 @@ intros a b a_positive b_positive,
   },
   rw mul_comm at thing2,
   rw mul_add at thing2,
-  have thing3 : r = a - (q * (a * x') + q * (b * y'))
+  have thing3 : r = a*(1-q*x')  +  (b *(q* y')), {
+    sorry,
+  },
   -- have thing3 : r= a - a*x' - b*y'*q, {
   --   rw subtr at thing2,
   --   rw dist_neg_add at thing2,

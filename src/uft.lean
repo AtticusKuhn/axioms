@@ -1,5 +1,6 @@
 import .ring
 import .set_1
+import tactic.basic
 -- import tactic
 open ring
 variables {R : Type} [ring R]
@@ -181,6 +182,54 @@ theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
   apply no_lt_self min,
   exact smaller,
   },
+end
+theorem pos_iff_le_one: ∀(a :ZZ), is_positive a ↔ 1 ≤ a := begin
+intro a,
+split,{
+intro pa,
+rw less_eq,
+have := pos_is_g0 a,
+ have z_le_a : 0 < a,{
+   rw less_than,
+   use a,
+   rw zero_add,
+   split,
+   exact pa,
+   refl,
+ },
+ have nibzo := NIBZO,
+ have trich := trichotomy_lt a 1,
+ rcases trich with ⟨one,two,three⟩, {
+   exfalso,
+   apply nibzo,
+   use a,
+   change (0<a ∧ a < 1),
+   split,
+   exact z_le_a,
+   exact one,
+ },
+ rcases trich with ⟨one,two,three⟩, {
+   right,
+   symmetry,
+   exact two,
+ },
+ rcases trich with ⟨one,two,three⟩, {
+   left,
+   exact three,
+ },
+},
+intro a_le_one,
+rw less_eq at a_le_one,
+-- rw 
+cases a_le_one with l r,{
+rw less_than at l,
+rcases l with ⟨g,h,j⟩ ,
+have pp := pos_plus_pos one_pos h,
+rw ← j,
+exact pp,
+},
+rw ← r,
+exact one_pos,
 end
 theorem le_le_eq: ∀( a b: O), a ≤ b → b ≤ a → a = b := begin
   intros d min d_le_min min_le_d,
@@ -369,8 +418,31 @@ intros na_le_nb,
 rw less_than at na_le_nb,
 cases na_le_nb with p na_le_nb,
 cases na_le_nb with p_pos na_le_nb,
+rw add_comm at na_le_nb,
+have move := move na_le_nb,
+rw less_than,
+use p,
+split,{
+  exact p_pos,
 },
-sorry,
+rw move,
+rw ←  add_assoc,
+rw add_neg,
+rw zero_add,
+rw neg_neg_a,
+},
+intros b_lt_a,
+rw less_than at b_lt_a,
+rcases b_lt_a with ⟨w,x,y,z⟩,
+rw less_than,
+use w,
+split,
+exact x,
+rw dist_neg_add,
+rw add_assoc,
+rw add_comm (-w) w,
+rw add_neg,
+rw add_zero,
 end
 theorem not_le_iff_ge: ∀(a b: O), a < b ↔ ¬ (b ≤  a):=
 begin

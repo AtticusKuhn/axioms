@@ -1,6 +1,6 @@
 # Axioms
 
-We wrote up some of the proofs from our number theory course in lean
+We wrote up some of the proofs from our number theory course in lean. Next Milestone: Proving Bezout's Lemma. Stretch Goal: Proving Unique Factorization on integers.
 
 ## Commutative Rings Axioms
 
@@ -24,3 +24,10 @@ We wrote up some of the proofs from our number theory course in lean
 ## Misc
 
 * (less than) `a < b` is defined to mean that there exists a positive number `p` such that `b = a + p` 
+
+## Well Ordering Principle
+
+* Every nonempty subset of the postive integers has a minimal element
+* In lean this is implemented with propositions:
+* For every proposition on the integers that holds on at least one positive integer, there is a positive integer for which the proposition holds, such that it is less than or equal to every other integer for which the proposition holds.
+* This formalization of the Well Ordering Principle is very unwieldy to use in lean, but we formalized it this way to maintain consistency with our number theory class.

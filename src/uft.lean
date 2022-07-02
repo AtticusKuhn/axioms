@@ -174,7 +174,11 @@ sorry,
 end
 theorem dist_neg_add: ∀(a b: O), -(a+b)  = -a + -b:=
 begin
-sorry,
+intros a b,
+rw ← mul_neg_one (a+b),
+rw mul_add,
+rw mul_neg_one,
+rw mul_neg_one,
 end
 
 

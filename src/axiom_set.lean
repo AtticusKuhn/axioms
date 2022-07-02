@@ -874,4 +874,59 @@ begin
     exact that,
   }
 end
+theorem pos_div_pos: ∀ (a b p: O ), is_positive a  → is_positive b → a*p=b → is_positive p := begin
+intros a b p a_pos b_pos equ,
+-- rw divs at a_divs_b,
+-- cases a_divs_b with p equ,
+have p_pos : is_positive p, {
+by_contradiction,
+have trich := trichotomy p,
+cases trich, {
+cases trich,{
+apply h,
+exact trich_left,
+},
+
+},
+cases trich, {
+cases trich, {
+cases  trich_right, {
+rw trich_right_left at equ,
+rw mul_zero at equ,
+have x:=pos_not_zero b_pos,
+apply x,
+symmetry,
+exact equ,
+},
+},
+},
+cases trich,{
+cases trich_right,{
+have pp := pos_times_pos a_pos trich_right_right,
+rw dist_neg_right at pp,
+rw equ at pp,
+have trichb := trichotomy b,
+cases trichb, {
+cases trichb, {
+cases trichb_right, {
+apply trichb_right_right,
+exact pp,
+},
+},
+},
+cases trichb, {
+cases trichb, {
+apply trichb_left,
+exact b_pos,
+},
+},
+cases trichb ,{
+apply trichb_left,
+exact b_pos,
+},
+},
+},
+},
+exact p_pos,
+end
 /- P5: Subtraction is associative: WRONG and UNSALVAGEABLE -/

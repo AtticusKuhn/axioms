@@ -576,7 +576,16 @@ intros a b a_positive b_positive,
     symmetry,
     exact zero_le_r,
   },
-
+  let d:ZZ  := gcd a b,
+  have min_div_a : min ∣ a,{
+    sorry
+  },
+   have min_div_b : min ∣ b,{
+    sorry
+  },
+  have d_div: d ∣ (a*x'+b*y'),{
+    sorry
+  },
   -- have thing3 : r= a - a*x' - b*y'*q, {
   --   rw subtr at thing2,
   --   rw dist_neg_add at thing2,

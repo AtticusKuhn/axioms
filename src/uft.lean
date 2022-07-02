@@ -538,13 +538,19 @@ intros a b a_positive b_positive,
 
     sorry,
   },
-  have r_lt_min: r < min, {
-sorry,
-  },
   have rnotpos: ¬ (is_positive r), {
     intro h,
     -- rw pos_is_g0 r at h,
-    sorry,
+    have wop_prop_r : WOP_prop r,
+    {
+      split,
+      split,
+      split,
+      symmetry,
+      exact thing3,
+      exact h,
+    },
+    have := stuff r wop_prop_r,
   },
   have r_is_0: r=0, {
     cases ineq with r_lt_min zero_le_r,

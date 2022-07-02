@@ -428,8 +428,15 @@ exact b_posit,
   apply contra_candidate,
   exact app_min,
 },
+cases min_smaller_other with min_pos garbage,
+have thing := pos_is_g0 min,
+rw thing at min_pos,
+apply contradict,
+rw less_eq,
+left,
+exact min_pos
 
-sorry,
+-- sorry,
 
 },
 
@@ -527,6 +534,7 @@ intros a b a_positive b_positive,
   },
   rw mul_comm at thing2,
   rw mul_add at thing2,
+  have thing3 : r = a - (q * (a * x') + q * (b * y'))
   -- have thing3 : r= a - a*x' - b*y'*q, {
   --   rw subtr at thing2,
   --   rw dist_neg_add at thing2,

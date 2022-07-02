@@ -698,7 +698,12 @@ intros a b a_positive b_positive,
     exact zero_le_r2,
   },
    have min_div_b : min ∣ b,{
-    sorry
+    rw r2_is_0 at eq2,
+    rw add_zero at eq2,
+    rw divs,
+    split,
+    symmetry,
+    exact eq2,
   },
   have d_div: d ∣ (a*x'+b*y'),{
     

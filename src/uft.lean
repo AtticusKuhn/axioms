@@ -420,9 +420,13 @@ intros a b a_positive b_positive,
   have euclidean_min := Euclidean_Algorithm_One_Step_two a min a_positive min_pos,
   cases euclidean_min with q rest,
   cases rest with r eq,
+  cases eq with eq ineq,
+  have thing:  r= a-min*q, {
+    have rev : min * q + r = a, {symmetry,exact eq},
 
-  -- have r= a-mq, {
-
-  -- },
+    -- symmetry,
+    have m:= move rev,
+    -- rw move,
+  },
   sorry,
 end

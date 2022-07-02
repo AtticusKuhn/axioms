@@ -701,6 +701,7 @@ intros a b a_positive b_positive,
     sorry
   },
   have d_div: d ∣ (a*x'+b*y'),{
+    
     sorry
   },
   have d_div_min: d ∣ min, {

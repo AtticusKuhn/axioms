@@ -236,7 +236,7 @@ sorry,
 end
 
 
-theorem Euclidean_Algorithm_One_Step_two: ∀ (a b: ZZ),  is_positive a → is_positive b → ∃ (q r :ZZ), a=b*q+r ∧ r < b :=
+theorem Euclidean_Algorithm_One_Step_two: ∀ (a b: ZZ),  is_positive a → is_positive b → ∃ (q r :ZZ), a=b*q+r ∧ r < b ∧ 0 ≤ r :=
 begin
   --introduce variable a b,
   intros a b a_pos b_pos,
@@ -299,6 +299,8 @@ rw zero_add,
 },
 -- proof by contradiction, assum min ≥ b
 by_contradiction contradict,
+rw push_and at contradict,
+cases contradict,{
 rw not_le_ge at contradict,
 rw sub_both_le (b) (min) (b) at contradict,
 simp at contradict,
@@ -359,6 +361,11 @@ exact b_posit,
   apply contra_candidate,
   exact app_min,
 },
+
+sorry,
+
+},
+
 },
 -- exact q,
 end
@@ -415,7 +422,9 @@ intros a b a_positive b_positive,
           rw mul_one,
           rw add_zero,
         },
+        split,
         exact a_works,
+        exact a_positive,
       },
     },
   },
@@ -427,7 +436,7 @@ intros a b a_positive b_positive,
   have WOP_exists := WOP Wop_Some,
   cases WOP_exists with min min_smallest, 
   cases min_smallest with WOP_Min others_smaller,
-  change (∃ (x' y' : ZZ), a*x' + b*y' = min) at WOP_Min,
+  change (∃ (x' y' : ZZ), a*x' + b*y' = min ∧ is_positive min) at WOP_Min,
   cases WOP_Min with x' rest,
     cases rest with y' rest,
 
@@ -437,6 +446,7 @@ intros a b a_positive b_positive,
   cases euclidean_min with q rest,
   cases rest with r eq,
   cases eq with eq ineq,
+  cases rest with rest axas,
   have thing:  r= a-min*q, {
     have rev : min * q + r = a, {symmetry,exact eq},
     rw add_comm at rev,

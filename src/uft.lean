@@ -363,6 +363,13 @@ end
 @[simp]
 theorem neg_comp: ∀(a b: O), -a < -b ↔ b < a:=
 begin
+intros a b,
+split, {
+intros na_le_nb,
+rw less_than at na_le_nb,
+cases na_le_nb with p na_le_nb,
+cases na_le_nb with p_pos na_le_nb,
+},
 sorry,
 end
 theorem not_le_iff_ge: ∀(a b: O), a < b ↔ ¬ (b ≤  a):=

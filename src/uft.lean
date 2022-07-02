@@ -159,7 +159,7 @@ end
 
 theorem push_not_exists: ∀{x : Type}, ∀{p: x→ Prop}, (¬ (∃(q : x), p(q))) ↔ (∀ (q : x), ¬ p(q)):=
 begin
-sorry,
+  intros x p,
 end
 theorem push_and: ∀{p q : Prop}, (¬ (p ∧ q)) ↔ (¬ p ∨ ¬ q):=
 begin
@@ -178,6 +178,15 @@ begin
       right,
       exact h,
     }
+  },
+  {
+    intro pq,
+    intro paq,
+    cases pq,
+    apply pq,
+    exact paq.1,
+    apply pq,
+    exact paq.2,
   }
 end
 theorem not_le_ge: ∀{a b : O}, (¬ (a < b)) ↔ ( b ≤ a):=

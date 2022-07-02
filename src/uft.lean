@@ -156,32 +156,168 @@ theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
   },
 end
 
-theorem Contra_Euclidean_Algorithm_One_Step:∃ (a b: ZZ), ¬ ( ∀ (q r :ZZ), (a=b*q+r)→  r > b) := begin
-let euclidean : ZZ → Prop := λ a, ∀ (b:ZZ), ¬∀ (  q r : ZZ), a = b * q + r →  r > b,
-have := WOP_Contradiction (euclidean) ,
-have thing :(∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬euclidean minimal → ¬euclidean smaller ∧ smaller < minimal)  := begin
-intros minimal,
-split, {
-  intros em,
-  -- change (¬euclidean minimal) with (∀ (a b q r :ZZ), (a=b*q+r)→  r > b) at  em,
-  -- rw euclidean at em,
-sorry,
-},
-sorry,
-end,
- have that := this thing,
- sorry,
--- exact that,
-
-end
-theorem Euclidean_Algorithm_One_Step_two: ∀ (a b: ZZ), ∃ (q r :ZZ), a=b*q+r ∧ r < b :=
+theorem push_not_exists: ∀{x : Type}, ∀{p: x→ Prop}, (¬ (∃(q : x), p(q))) ↔ (∀ (q : x), ¬ p(q)):=
 begin
-intros a b,
-let WOP_prop : ZZ → Prop := λ s, ∃ (q : ZZ), s = a-b*q ∧ a-b*q > 0,
-have WOP := explicit_WOP WOP_prop,
-cases WOP,
-
 sorry,
+end
+theorem push_and: ∀{p q : Prop}, (¬ (p ∧ q)) ↔ (¬ p ∨ ¬ q):=
+begin
+sorry,
+end
+theorem not_le_ge: ∀{a b : O}, (¬ (a < b)) ↔ ( b ≤ a):=
+begin
+sorry,
+end
+theorem sub_both_le: ∀(a b x: O), ((a ≤  b)) ↔ ( a-x ≤ b-x):=
+begin
+sorry,
+end
+theorem dist_neg_add: ∀(a b: O), -(a+b)  = -a + -b:=
+begin
+sorry,
+end
+
+
+@[simp]
+theorem lt_cancel: ∀(a b c: O), c+a < c+b ↔ a < b:=
+begin
+sorry,
+end
+@[simp]
+theorem neg_comp: ∀(a b: O), -a < -b ↔ b < a:=
+begin
+sorry,
+end
+theorem not_le_iff_ge: ∀(a b: O), a < b ↔ ¬ (b ≤  a):=
+begin
+sorry,
+end
+
+
+theorem Euclidean_Algorithm_One_Step_two: ∀ (a b: ZZ),  is_positive a → is_positive b → ∃ (q r :ZZ), a=b*q+r ∧ r < b :=
+begin
+  --introduce variable a b,
+  intros a b a_pos b_pos,
+  -- defined the set
+  let WOP_prop : ZZ → Prop := λ s, ∃ (q : ZZ), s = a-b*q ∧  0 ≤ a-b*q,
+  -- perform WOP on the set
+  have WOP := explicit_WOP WOP_prop,
+  -- WOP holds on a
+  have a_WOP_Prop : WOP_prop a := begin
+  change (∃ (q : ZZ), a = a-b*q ∧ 0 ≤  a-b*q),
+  split, {
+    split, {
+        have zero_work :a = a - b * 0 := begin
+        rw mul_zero,
+        rw sub_zero,
+        end,
+        exact zero_work,
+    },
+  rw mul_zero,
+  rw sub_zero,
+  -- 0 < a
+  have a_ge_0 : 0 < a := begin
+    have a_pos_iff := pos_is_g0 a,
+    cases a_pos_iff with forward backward,
+    exact forward a_pos,
+  end,
+  rw less_eq,
+  left,
+  exact a_ge_0
+  },
+end,
+-- there exists an integer for which the proposition holds
+have WOP_some :  (∃ (some : ZZ), WOP_prop some) := begin
+split,{
+exact a_WOP_Prop,
+},
+end,
+-- the set has a minimal element
+have WOP_min := WOP WOP_some,
+-- call the minimal element min
+cases WOP_min with min min_smallest,
+cases min_smallest with WOP_Prop_min min_smaller_other,
+change  (∃ (q : ZZ), min = a-b*q ∧ 0 ≤  a-b*q) at WOP_Prop_min,
+cases WOP_Prop_min with q q_eq,
+cases q_eq with q_eq q_small,
+split, {
+split, {
+split, {
+  have thing :a = b * q + min := begin
+  rw q_eq,
+  rw subtr,
+  rw ← add_assoc,
+rw add_comm,
+rw ←  add_assoc,
+rw add_comm (-(b * q)) ((b * q)),
+rw add_neg,
+rw zero_add,
+  end,
+  exact thing,
+},
+-- proof by contradiction, assum min ≥ b
+by_contradiction contradict,
+rw not_le_ge at contradict,
+rw sub_both_le (b) (min) (b) at contradict,
+simp at contradict,
+-- 0 ≤ a  - b *  (q +1)
+have smallerthing : 0 ≤ a  - b *  (q +1) := begin
+rw subtr,
+rw mul_add,
+rw mul_one,
+rw dist_neg_add,
+rw ← add_assoc,
+rw ← subtr,
+rw ← subtr,
+rw ←  q_eq,
+exact contradict,
+end,
+-- 0 ≤ a  - b *  (q +1) ∈ S
+have prop_smaller: WOP_prop (a  - b *  (q +1)) := begin
+change  (∃ (x : ZZ), a  - b *  (q +1) = a-b*x ∧ 0 ≤  a-b*x),
+
+split, {
+split, {
+  have reflx : a - b * (q + 1) = a - b * (q+1), {
+refl,
+  },
+  exact reflx,
+},
+exact smallerthing,
+},
+end,
+-- a - b * (q + 1) < a-b*q
+ have even_smaller :  a - b * (q + 1) < a-b*q := begin
+rw subtr,
+rw subtr,
+rw mul_add,
+rw dist_neg_add,
+rw lt_cancel,
+rw ← add_zero (-(b * q)),
+rw  add_assoc,
+rw lt_cancel,
+rw zero_add,
+rw mul_one,
+have b_posit : 0 < b, {
+  rw ← pos_is_g0 b,
+  exact b_pos,
+},
+rw  ← neg_zero,
+rw neg_comp,
+exact b_posit,
+ end,
+ have min_contra := min_smaller_other (a - b * (q + 1)),
+ have app_min  := min_contra prop_smaller,
+ rw q_eq at app_min,
+  have contra_candidate : ¬ (a - b * q ≤ a - b * (q + 1) ), {
+    rw ←  not_le_iff_ge,
+    exact even_smaller,
+  },
+  apply contra_candidate,
+  exact app_min,
+},
+},
+-- exact q,
 end
 --  def
 theorem Euclidean_Algorithm_One_Step: ∀ (a b: ZZ), ∃ (q r :ZZ), a=b*q+r ∧ r < b := begin

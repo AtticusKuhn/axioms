@@ -56,6 +56,8 @@ lemma right_cancel: ∀ {a b c : R}, b+a=c+a → b=c := begin
 end
 
 /- anything times zero is zero -/
+
+@[simp]
 lemma mul_zero : ∀{a : R}, a * 0 = 0 :=
 begin 
   intro a,
@@ -730,12 +732,24 @@ lemma thing : ∀ {P Q R : Prop}, (¬ P ∧  ¬ Q → ¬ R) → (R →  P ∨  Q
 end
 @[simp]
 /- -0 = 0-/
-lemma neg_zero : -(0 : O) = 0 := 
+lemma neg_zero : -(0 : R) = 0 := 
 begin 
   rw ← mul_neg_one,
   rw mul_zero,
 end
+@[simp] lemma sub_zero: ∀{a:R}, a-0=a := begin
+intros a,
+rw subtr a (0:R),
+rw neg_zero,
+rw add_zero,
+end
+@[simp] lemma sub_self: ∀{a:R}, a-a=0 := begin
+intros a,
+rw subtr a (a),
+exact add_neg a,
+end
 /- 
+
   P6: SALVAGE: In an ordered ring:  ab = 0 → a = 0 or b = 0
   we proved the contrapositive because it was easier and a constructive proof
   the lemma "thing" was used to recover the original version

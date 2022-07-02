@@ -22,7 +22,7 @@ class ring (R : Type) extends has_group_notation R :=
   (divs : ∀(a b :R), a ∣ b ↔ (∃ (c:R), a*c=b))
   /- -a is the inverse of a-/
   (add_neg : ∀(a : R), a + -a = 0)
-  (subtr : ∀(a : R), a - a = 0)
+  (subtr : ∀(a b : R), a - b =  a + -b)
 
   -- (exp : ∀(a : R)( r: ℕ ), a^r = a*a^(r-1))
 

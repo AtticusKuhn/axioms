@@ -204,7 +204,46 @@ begin
 end
 theorem not_le_ge: ∀{a b : O}, (¬ (a < b)) ↔ ( b ≤ a):=
 begin
-sorry,
+  intros a b,
+  split,
+  {
+    intro ab,
+    cases trichotomy_lt a b,
+    {
+      exfalso,
+      apply ab,
+      exact h.1,  
+    },
+    cases h,
+    {
+      rw h.2.1,
+      rw less_eq,
+      right,
+      refl,
+    },
+    {
+      rw less_eq,
+      left,
+      exact h.2.2,
+    }
+  },
+  {
+    intros ba h,
+    --rw less_than at h,
+    rw less_eq at ba,
+    cases ba,
+    {
+      have := trans_lt h ba,
+      apply no_lt_self a,
+      exact this,
+    },
+    {
+      rw
+      ba at h,
+      apply no_lt_self a,
+      exact h,
+    },
+  }
 end
 theorem sub_both_le: ∀(a b x: O), ((a ≤  b)) ↔ ( a-x ≤ b-x):=
 begin

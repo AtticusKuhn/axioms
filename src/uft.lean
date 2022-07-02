@@ -383,7 +383,7 @@ split, {
 },
 intro n_b_le_a,
 rw less_eq at n_b_le_a,
-rw push_and at n_b_le_a,
+-- rw push_and at n_b_le_a,
 have trich := trichotomy_lt a b,
 sorry,
 end

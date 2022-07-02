@@ -32,6 +32,21 @@ theorem WOP_Contradiction:
   -- have mins := wop_h (h),
   sorry,
 end 
+theorem gcd_pos: ∀ (a b : ZZ), is_positive (gcd a b) := begin
+sorry,
+end
+theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
+  intros a b a_pos b_pos a_div_b,
+  rw divs at a_div_b,
+  cases a_div_b,{
+--  have p_pos : is_positive p := pos_div_pos a b
+-- have eq : p*(a-1) +p = b,{
+
+-- },
+    sorry,
+  },
+ 
+end
 theorem pos_is_g0: ∀ (x:O), is_positive x ↔ 0< x := begin
 intros a,
 split, {
@@ -706,17 +721,21 @@ intros a b a_positive b_positive,
     exact eq2,
   },
   have d_div: d ∣ (a*x'+b*y'),{
-    have : d ∣ a,
-    {
-      
-    }
-    sorry,
+    
+    sorry
   },
   have d_div_min: d ∣ min, {
     sorry,
   },
+  have d_pos: is_positive d := begin
+    change (is_positive (gcd a b)),
+    exact gcd_pos a b,
+    -- sorry,
+  end,
   have d_le_min: d ≤ min, {
-    sorry,
+
+     exact divs_le d min d_pos axas  d_div_min,
+    -- sorry,
   },
   have min_le_d: min ≤ d, {
     sorry,

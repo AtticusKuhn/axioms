@@ -1,7 +1,9 @@
-import .ring
+import .myRing
+import tactic.basic
+
 -- import tactic
-open ring
-variables {R : Type} [ring R]
+open myRing
+variables {R : Type} [myRing R]
 variables {O : Type} [ordered_ring O ]
 
 --  variable is_positive : O → Prop
@@ -74,8 +76,8 @@ end
 
 /-
 P2. Use P1 to deduce that 0 ≠ 1
-False. 0 = 1 in the trivial ring.`
-P2 SALVAGE. Zero is only one in the trivial ring.
+False. 0 = 1 in the trivial myRing.`
+P2 SALVAGE. Zero is only one in the trivial myRing.
 -/
 theorem zero_is_one_implies_trivial : ((0: R) = 1) → (∀(a : R), a = 0) := 
 begin 
@@ -271,7 +273,19 @@ theorem one_pos : is_positive(1:O) := begin
 end
 
 theorem trans_lt : ∀{a b c : O}, a < b → b <  c → a < c := begin
-sorry,
+intros a b c a_le_b b_le_c,
+rw less_than at a_le_b,
+rw less_than at b_le_c,
+rcases a_le_b with ⟨p1, p1pos, eq1⟩ , 
+rcases b_le_c with ⟨p2, p2pos, eq2⟩ , 
+
+rw less_than,
+use p1 + p2,
+split,
+exact pos_plus_pos p1pos p2pos,
+rw ← eq1 at eq2,
+rw add_assoc at eq2,
+exact eq2,
 end
 /-
   P8 Prove the transitivity of ≤ 
@@ -343,6 +357,11 @@ begin
 end
 /- you can multiply by stuff on the right-/
 lemma mul_right : ∀{a b : R}, ∀(c : R), a = b → a * c = b * c :=
+begin 
+  intros a b c h,
+  rw h,
+end
+lemma mul_left : ∀{a b : R}, ∀(c : R), a = b → c*a = c*b :=
 begin 
   intros a b c h,
   rw h,
@@ -702,7 +721,29 @@ theorem mul_lt_mul : ∀{a b x y : O},
   x < y → 
   a * x < b * y :=
 begin
- sorry,
+ intros a b x y a_pos x_pos aleb xley,
+ rw less_than at aleb,
+ rw less_than at xley,
+ rw less_than,
+ rcases aleb with ⟨p1,p1pos, eq1 ⟩, 
+rcases xley with ⟨p2,p2pos, eq2 ⟩, 
+have eq3 : (a + p1)*(x+p2) = b*y := begin
+rw eq2,
+rw eq1,
+end,
+rw mul_add at eq3,
+rw mul_comm at eq3,
+rw mul_comm (a+p1) p2 at eq3,
+rw mul_add at eq3,
+rw mul_add at eq3,
+rw  add_assoc at eq3,
+use x * p1 + p2 * a + p2 * p1,
+split, {
+exact (pos_plus_pos (pos_plus_pos (pos_times_pos x_pos p1pos) (pos_times_pos p2pos a_pos)) (pos_times_pos p2pos p1pos)),
+},
+rw mul_comm a x,
+rw add_assoc,
+exact eq3,
 end
 
 /- If a is positive then it isn't zero -/
@@ -750,7 +791,7 @@ exact add_neg a,
 end
 /- 
 
-  P6: SALVAGE: In an ordered ring:  ab = 0 → a = 0 or b = 0
+  P6: SALVAGE: In an ordered myRing:  ab = 0 → a = 0 or b = 0
   we proved the contrapositive because it was easier and a constructive proof
   the lemma "thing" was used to recover the original version
 -/
@@ -845,7 +886,7 @@ begin
   exact x2,
 end
 /-
-  P6: SALVAGE : In an ordered ring you can cancel multiplication,
+  P6: SALVAGE : In an ordered myRing you can cancel multiplication,
   in other words: if c ≠ 0 and a * c = b * c, then a = b
 -/
 theorem mul_cancel : ∀{a b c : O},  a * c = b * c  → c ≠ 0 → a = b:=

@@ -1,9 +1,9 @@
-import .ring
+import .myRing
 import .set_1
 import tactic.basic
 -- import tactic
-open ring
-variables {R : Type} [ring R]
+open myRing
+variables {R : Type} [myRing R]
 variables {O : Type} [ordered_ring O ]
 variables {ZZ : Type} [Integers ZZ ]
 
@@ -928,4 +928,33 @@ intros a b a_positive b_positive,
         exact final,
     },
   },
+end
+
+theorem Fundamental_Lemma: ∀ (a b c:ZZ), a ∣ (b*c) → gcd a b = 1 → is_positive a → is_positive b → a ∣ c := begin
+intros a b  c a_div_bc gcd_a_b a_pos b_pos,
+have bezout := BezoutsLemma a b a_pos b_pos,
+rcases bezout with ⟨x,y,equation ⟩,
+rw gcd_a_b at equation,
+rw divs at a_div_bc,
+rcases a_div_bc with ⟨p, eq ⟩,
+have mulled : a * x *c + a * p * y = c, {
+rw eq,
+-- rw mul_assoc a p y,
+rw mul_comm (a*x) c,
+rw mul_assoc b c y,
+
+rw mul_comm (b) (c*y),
+rw  mul_assoc c y b,
+rw ← mul_add,
+have mulled_equation := mul_left c equation,
+rw mul_one at mulled_equation,
+rw mul_comm y b,
+exact mulled_equation,
+},
+rw mul_assoc at mulled,
+rw mul_assoc at mulled,
+rw ←  mul_add at mulled,
+rw divs,
+use (x * c + p * y),
+exact mulled,
 end

@@ -1,9 +1,9 @@
 
-import .ring
+import .myRing
 import .axiom_set
 -- import tactic
-open ring
-variables {R : Type} [ring R]
+open myRing
+variables {R : Type} [myRing R]
 variables {O : Type} [ordered_ring O ]
 
 
@@ -81,5 +81,5 @@ end
 
 theorem neg_one_mul_neg_one: (-1:R) * (-1:R) = 1 := begin
  simp,
- rw mul_one,
+--  rw mul_one,
 end

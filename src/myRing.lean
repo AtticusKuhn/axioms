@@ -2,7 +2,7 @@
 
 
 class has_group_notation (R : Type) extends has_mul R, has_add R, has_zero R, has_one R, has_neg R, has_dvd R, has_sub R
-class ring (R : Type) extends has_group_notation R :=
+class myRing (R : Type) extends has_group_notation R :=
   /- associativity of multiplication-/
   (mul_assoc : ∀ (a b c : R), a * b * c = a * (b * c))
   /- anything times one is just itself-/
@@ -27,9 +27,9 @@ class ring (R : Type) extends has_group_notation R :=
   -- (exp : ∀(a : R)( r: ℕ ), a^r = a*a^(r-1))
 
  
-namespace ring
-  variables {R : Type} [ring R]
-  class ordered_ring (R  : Type) extends ring R, has_lt R, has_le R
+namespace myRing
+  variables {R : Type} [myRing R]
+  class ordered_ring (R  : Type) extends myRing R, has_lt R, has_le R
   class Integers (ZZ  : Type) extends   ordered_ring ZZ :=
     (WOP : ∀(proposition : ZZ → Prop), 
     ((∃ (some:ZZ), 
@@ -60,9 +60,9 @@ namespace ring
   axiom pos_times_pos:  ∀{ a b : O}, is_positive a → is_positive b → is_positive (a*b)
   /- The positives are closed under addition -/
   axiom pos_plus_pos:  ∀{ a b : O}, is_positive a → is_positive b → is_positive (a+b)
-  /- The trivial ring is not ordered -/
+  /- The trivial myRing is not ordered -/
   axiom nontriviality:  ¬ is_positive(0:O)
-  /- At leaset one element of the ring is positive -/
+  /- At leaset one element of the myRing is positive -/
   axiom nonempty_pos : ∃{a : O}, is_positive a
   /- One of the following is true: a is positive, a = 0, or -a is positive -/
   axiom trichotomy:  ∀( a : O),
@@ -81,5 +81,5 @@ namespace ring
   gcd a b=c ↔ c ∣ a ∧ c ∣ b 
   ∧ (∀(d:ZZ), d ∣ a ∧ d ∣  b → d ≤ c)
   export Integers
-end ring
-export ring
+end myRing
+export myRing

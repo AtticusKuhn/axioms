@@ -553,7 +553,9 @@ intros a b a_positive b_positive,
     have rlemin := stuff r wop_prop_r,
     rw less_eq at rlemin,
     cases rlemin,
-    have := trans_lt,
+    have := trans_lt ineq.1 rlemin,
+    
+    sorry,
     sorry,
   },
   have r_is_0: r=0, {

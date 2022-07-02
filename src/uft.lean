@@ -534,13 +534,23 @@ intros a b a_positive b_positive,
   },
   rw mul_comm at thing2,
   rw mul_add at thing2,
-  have thing3 : r = a*(1-q*x')  +  (b *(q* y')), {
+  have thing3 : r = a*(1-q*x')  +  (b *(-q* y')), {
     rw subtr,
     rw mul_add,
     rw mul_one,
-    
-    
-    sorry,
+    rw ← dist_neg_left,
+    rw ← mul_assoc,
+    rw mul_comm a (-q),
+    rw mul_assoc,
+    rw ← mul_assoc b (-q) y',
+    rw mul_comm b (-q),
+    rw mul_assoc,
+    rw add_assoc,
+    rw ← mul_add,
+    rw dist_neg_left,
+    rw ← subtr,
+    rw mul_add,
+    exact thing2,
   },
   have rnotpos: ¬ (is_positive r), {
     intro h,

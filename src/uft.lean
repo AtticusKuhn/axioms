@@ -729,7 +729,8 @@ intros a b a_positive b_positive,
     exact divs_linear_combination x' y' left r,
   },
   have d_div_min: d ∣ min, {
-    sorry,
+    rw ← rest,
+    exact d_div,
   },
   have d_pos: is_positive d := begin
     change (is_positive (gcd a b)),

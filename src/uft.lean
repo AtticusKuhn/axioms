@@ -342,6 +342,24 @@ sorry,
 end
 theorem not_le_iff_ge: ∀(a b: O), a < b ↔ ¬ (b ≤  a):=
 begin
+intros a b,
+split, {
+  intros a_le_b,
+  by_contradiction,
+  rw less_eq at h,
+  cases h, {
+    have tr := trans_lt a_le_b h,
+    apply no_lt_self a,
+    exact tr,
+  },
+  rw h at a_le_b,
+   apply no_lt_self a,
+    exact a_le_b,
+},
+intro n_b_le_a,
+rw less_eq at n_b_le_a,
+rw push_and at n_b_le_a,
+have trich := trichotomy_lt a b,
 sorry,
 end
 

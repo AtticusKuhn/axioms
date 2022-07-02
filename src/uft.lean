@@ -159,6 +159,10 @@ theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
   exact smaller,
   },
 end
+theorem pos_ge_one: ∀ (a :ZZ), is_positive a → 1 ≤ a := begin
+
+sorry,
+end
 theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
   intros a b a_pos b_pos a_div_b,
   rw divs at a_div_b,

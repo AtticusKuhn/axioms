@@ -728,11 +728,13 @@ intros a b a_positive b_positive,
     sorry,
   },
   have d_pos: is_positive d := begin
-    
-    sorry,
+    change (is_positive (gcd a b)),
+    exact gcd_pos a b,
+    -- sorry,
   end,
   have d_le_min: d ≤ min, {
     --  exact divs_le d min  d_div,
+    sorry,
   },
   have min_le_d: min ≤ d, {
     sorry,

@@ -142,6 +142,7 @@ theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
     },
     exact minmin_lt_1
   end,
+  cases others_right with others_left others_right,
   -- finally, this is a contradiction because we assumed min was the smallest element
   have min_le_minmin := others_right (min*min) nibzominmin,
   rw less_eq at min_le_minmin,
@@ -325,6 +326,7 @@ rw  ← neg_zero,
 rw neg_comp,
 exact b_posit,
  end,
+ cases min_smaller_other with x min_smaller_other,
  have min_contra := min_smaller_other (a - b * (q + 1)),
  have app_min  := min_contra prop_smaller,
  rw q_eq at app_min,
@@ -338,7 +340,46 @@ exact b_posit,
 },
 -- exact q,
 end
---  def
+/-
+
+Fix $a$ and $b$.
+Consider the set 
+$$S= \{ax+by \mid ax+by \ge 0, x,y \in \ZZ \}.$$
+$S$ is non-empty because $a \in S$.
+All elements  of $S$ are positive by construction. This means $S$ has a minimal element, call it $m$ by WOP.  By the construction of $m$, let 
+$$m=ax'+by'$$
+for some integers $x',y'$.
+By lemma \ref{l:ES}, there exists integers
+$q,r$ such that $a=mq+r$ and $0 \le r < m$.
+Since $r < m$ and $m$ is the minimal element
+of $S$, it follows that $r \not\in S$.
+By algebraic manipulation, we have
+$$r=a-mq=a-(ax'+by')q=a-ax'-by'q = a(1-x')+b(-y'a).$$
+
+We find that $r$ is expressible as $ax+by$ (with $x=1-x'$ and $y=-y'a$), so the only
+way that $r\not\in S$ is that $r \le 0$.
+By construction, we know $r \ge 0$, so this
+means $r=0$. This gives us that
+$0=a-mq \implies a=mq$, which gives that
+$m \mid a$ by Definition \ref{def:divs}. 
+By similar reasoning, we can deduce $m \mid b$.
+Let $d=gcd(a,b)$.
+% Since
+% $m \mid a$ and $m \mid b$, therefore $m \mid d$ by Theorem \ref{thm:divsgcd}.
+ By the definition of GCD,
+we have $d \mid a$ and $d \mid b$. This means
+by Theorem \ref{thm:lincombdivs} that $d \mid (ax'+by')$. But $ax'+by'=m$, so $d\mid m$.
+% By Theorem \ref{thm:divsequal}, 
+By Lemma \ref{lem:div_lt}, we have $d \le m$.
+But $m$ is a common divisor of both
+$a$ and $b$, so by Definition \ref{def:gcd}, $d \ge m$.
+The only possibility is that $d=m$.
+We have $m=d$.
+This means that there exists $x,y$ such that
+$ax+by = gcd(a,b)$, and in addition, $gcd(a,b)$
+is the smallest positive combination of $a,b$.
+
+-/
 theorem BezoutsLemma: ∀ (a b : ZZ), is_positive a → is_positive b → ∃ (x y : ZZ), a*x+b*y = gcd a b := begin
 intros a b a_positive b_positive,
   let WOP_prop : ZZ → Prop := λ s, ∃ (x y : ZZ), a*x + b*y = s,
@@ -365,7 +406,9 @@ intros a b a_positive b_positive,
   cases WOP_exists with min min_smallest, 
   cases min_smallest with WOP_Min others_smaller,
   change (∃ (x' y' : ZZ), a*x' + b*y' = min) at WOP_Min,
-  have euclidean_min := Euclidean_Algorithm_One_Step_two a min a_positive,
+  -- have mo
+  cases others_smaller with min_pos stuff,
+  have euclidean_min := Euclidean_Algorithm_One_Step_two a min a_positive min_pos,
 
   sorry,
 end

@@ -324,23 +324,33 @@ exact b_posit,
 -- exact q,
 end
 --  def
-theorem Euclidean_Algorithm_One_Step: ∀ (a b: ZZ), ∃ (q r :ZZ), a=b*q+r ∧ r < b := begin
--- intros a b,
-let euclidean : ZZ → Prop := λ a, ∀ ( b: ZZ), ∃ (q r :ZZ), a=b*q+r ∧ r < b,
-have := WOP_Contradiction (euclidean) ,
-have thing : (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬euclidean minimal → ¬euclidean smaller ∧ smaller < minimal)  := begin 
-intros a,
-split, {
-intros na,
+theorem BezoutsLemma: ∀ (a b : ZZ), is_positive a → is_positive b → ∃ (x y : ZZ), a*x+b*y = gcd a b := begin
+intros a b a_positive b_positive,
+  let WOP_prop : ZZ → Prop := λ s, ∃ (x y : ZZ), a*x + b*y = s,
+  have WOP := explicit_WOP WOP_prop,
+  have WOP_a :  WOP_prop a, {
+    change (∃ (x y : ZZ), a*x + b*y = a),
+    split, {
+      split, {
+        have a_works: a * 1 + b * 0 = a , {
+          simp,
+          rw mul_one,
+          rw add_zero,
+        },
+        exact a_works,
+      },
+    },
+  },
+  have Wop_Some: ∃(some: ZZ), WOP_prop some, {
+    split, {
+      exact WOP_a
+    },
+  },
+  have WOP_exists := WOP Wop_Some,
+  cases WOP_exists with min min_smallest, 
+  cases min_smallest with WOP_Min others_smaller,
+  change (∃ (x' y' : ZZ), a*x' + b*y' = min) at WOP_Min,
+  have euclidean_min := Euclidean_Algorithm_One_Step_two a min a_positive,
 
--- rw euclidean,
-sorry,
-},
-exact a,
--- sorry,
-end,
-have that := this thing,
-exact that,
--- cases this,
--- sorry,
+  sorry,
 end

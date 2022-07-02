@@ -431,6 +431,11 @@ intros a b a_positive b_positive,
   -- have mo
   cases others_smaller with min_pos stuff,
   have euclidean_min := Euclidean_Algorithm_One_Step_two a min a_positive min_pos,
+  cases euclidean_min with q rest,
+  cases rest with r eq,
 
+  -- have r= a-mq, {
+
+  -- },
   sorry,
 end

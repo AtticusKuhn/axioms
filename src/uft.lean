@@ -160,6 +160,19 @@ end
 theorem push_not_exists: ∀{x : Type}, ∀{p: x→ Prop}, (¬ (∃(q : x), p(q))) ↔ (∀ (q : x), ¬ p(q)):=
 begin
   intros x p,
+  split,
+  {
+    intros h q pq,
+    apply h,
+    split,
+    exact pq,
+  },
+  {
+    intros h pq,
+    cases pq with q pq,
+    apply h q,
+    exact pq,
+  }
 end
 theorem push_and: ∀{p q : Prop}, (¬ (p ∧ q)) ↔ (¬ p ∨ ¬ q):=
 begin

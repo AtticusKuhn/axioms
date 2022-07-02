@@ -773,18 +773,9 @@ intros a b a_positive b_positive,
        exact rest,
         end,
         have same: gcd a b =d, {refl},
-      sorry,
+        rw same,
+        exact final,
     },
-    sorry,
   },
-  -- split,{
-  --   split, {
 
-  --   },
-  -- },
-  -- have thing3 : r= a - a*x' - b*y'*q, {
-  --   rw subtr at thing2,
-  --   rw dist_neg_add at thing2,
-  -- },
-  sorry,
 end

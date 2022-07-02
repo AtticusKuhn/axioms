@@ -204,11 +204,78 @@ begin
 end
 theorem not_le_ge: ∀{a b : O}, (¬ (a < b)) ↔ ( b ≤ a):=
 begin
-sorry,
+  intros a b,
+  split,
+  {
+    intro ab,
+    cases trichotomy_lt a b,
+    {
+      exfalso,
+      apply ab,
+      exact h.1,  
+    },
+    cases h,
+    {
+      rw h.2.1,
+      rw less_eq,
+      right,
+      refl,
+    },
+    {
+      rw less_eq,
+      left,
+      exact h.2.2,
+    }
+  },
+  {
+    intros ba h,
+    --rw less_than at h,
+    rw less_eq at ba,
+    cases ba,
+    {
+      have := trans_lt h ba,
+      apply no_lt_self a,
+      exact this,
+    },
+    {
+      rw
+      ba at h,
+      apply no_lt_self a,
+      exact h,
+    },
+  }
+end
+lemma refl_le : ∀(a: O), a ≤ a :=
+begin 
+  intro a,
+  rw less_eq,
+  right, 
+  refl,
 end
 theorem sub_both_le: ∀(a b x: O), ((a ≤  b)) ↔ ( a-x ≤ b-x):=
 begin
-sorry,
+  intros a b x,
+  split,
+  {
+    intro ab,
+    have := add_le_add ab (refl_le (-x)),
+    rw subtr,
+    rw subtr,
+    exact this, 
+  },
+  {
+    intro axb,
+    have := add_le_add axb (refl_le x),
+    rw subtr at this,
+    rw subtr at this,
+    rw add_assoc at this,
+    rw add_assoc at this,
+    rw add_comm (-x) at this,
+    rw add_neg at this,
+    rw add_zero at this,
+    rw add_zero at this,
+    exact this,
+  }
 end
 theorem dist_neg_add: ∀(a b: O), -(a+b)  = -a + -b:=
 begin

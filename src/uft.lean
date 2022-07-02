@@ -20,7 +20,7 @@ theorem WOP_Contradiction:
 
   have  wop := WOP (λ x, ¬ prop(x)),
 
-  cases wop,
+  -- cases wop,
 
   -- have wopp_thing :  (∃ (minimal : ZZ), ∀ (other : ZZ), (λ (x : ZZ), ¬prop x) other → minimal ≤ other) := begin
   --   -- exact wop_h h,
@@ -71,7 +71,7 @@ end
 
 def nibzo : ZZ → Prop := λ x, 0<x ∧ x < 1
 
-theorem bruh: ∀ (a: O), 0 <a → 0 < a*a := begin
+theorem squares_pos: ∀ (a: O), 0 <a → 0 < a*a := begin
 intros a ag0,
 rw less_than at ag0,
 cases ag0 with p pos,
@@ -91,85 +91,69 @@ rw pea,
 end  
 
 theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
---  have 
- have wop_on_nibzo := explicit_WOP  nibzo , {
-intros contradict,
-cases wop_on_nibzo,
-cases contradict,
-have same : wop_on_nibzo_w = contradict_w := begin
-sorry,
- end,
- rw ←  same at contradict_h,
- have has_min := wop_on_nibzo_h contradict_h,
- cases has_min with  min others,
- have x : 0 < min ∧ min < 1,{
-
+  -- apply WOP to NIBZO
+  have wop_on_nibzo := explicit_WOP  nibzo , {
+   --Proof by contradiction, assume NIBZO doesn't hold
+  intros contradict,
+  -- then there exists a minimum element on which NIBZO doesn't hold
+  have has_min := wop_on_nibzo contradict,
+  -- call the minimum element min
+  cases has_min with  min others,
+  -- we have that min satisfies ¬nibzo
+  have x : 0 < min ∧ min < 1,{
     cases others with nibzo_min, 
     change (0 < min ∧ min < 1) at nibzo_min,
     exact nibzo_min,
-    -- sorry,
   },
   cases x with x1 x2,
-  -- sorry,
+  -- since  0 < min, then 0 < min*min
   have x : 0 < min*min := begin
-    exact bruh min x1,
+    exact squares_pos min x1,
   end,
+  -- since 0 < min*min, then min*min is positive
   have minpos: is_positive min := begin
-  rw ← pos_is_g0 at x1,
-  exact x1,
--- exact  pos_is_g0 (x1),
+    rw ← pos_is_g0 at x1,
+    exact x1,
   end,
+  -- since min < 1, then min ≤ 1
   have xle1 : min ≤ 1 := begin
-  rw less_eq,
-  left,
-  exact x2,
+    rw less_eq,
+    left,
+    exact x2,
   end,
-   have xother :  min*min < 1 := begin
-   sorry,
-    -- exact mul_le_mul (minpos) (minpos) (xle1) (xle1) ,
+  -- since min < 1, then min*min < 1 
+  have minmin_lt_1 :  min*min < 1 := begin
+    have mmin_le_1 :=  mul_lt_mul (minpos) (minpos) (x2) (x2) ,
+    rw mul_one at mmin_le_1,
+    exact mmin_le_1,
   end,
+  -- since min < 1, then min*min < min
   have smaller: min*min < min := begin
-   have minthing := mul_le min 1 min minpos x2 ,
-  --  rw ← mul_comm at minthing,
-   simp at minthing,
-   exact minthing,
-  --  rw mul_one at brere,
+    have minthing := mul_le min 1 min minpos x2 ,
+    simp at minthing,
+    exact minthing,
   end,
   cases others,
+  -- min*min satisfies nibzo
   have nibzominmin : nibzo (min*min) := begin
     change (0 < min*min ∧ min*min < 1),
     split, {
-exact x,
+      exact x,
     },
-    exact xother
+    exact minmin_lt_1
   end,
-  have asdasd := others_right (min*min) nibzominmin,
-rw less_eq at asdasd,
-cases asdasd, {
---  have qwerqe := trichotomy_lt (min) (min*min),
-sorry,
-},
-rw ←  asdasd at smaller,
-
-
-
--- have :=  wop_on_nibzo_h contradict_h,
-
--- rw wop_on_nibzo at contradict,
--- have := wop_on_nibzo contradict,
---    cases this, {
--- cases h, {
---   have x : this_w = h_w := begin
---   end,
--- have x  := this_h h_h,
--- },
---    },
---  have x := this h,
-
-sorry,
- },
-
- sorry,
+  -- finally, this is a contradiction because we assumed min was the smallest element
+  have min_le_minmin := others_right (min*min) nibzominmin,
+  rw less_eq at min_le_minmin,
+  cases min_le_minmin, {
+    have less_self := trans_lt min_le_minmin smaller,
+    apply no_lt_self min,
+    exact less_self,
+  },
+  rw ←  min_le_minmin at smaller,
+  apply no_lt_self min,
+  exact smaller,
+  },
 end
 
 theorem Contra_Euclidean_Algorithm_One_Step:∃ (a b: ZZ), ¬ ( ∀ (q r :ZZ), (a=b*q+r)→  r > b) := begin
@@ -190,7 +174,15 @@ end,
 -- exact that,
 
 end
+theorem Euclidean_Algorithm_One_Step_two: ∀ (a b: ZZ), ∃ (q r :ZZ), a=b*q+r ∧ r < b :=
+begin
+intros a b,
+let WOP_prop : ZZ → Prop := λ s, ∃ (q : ZZ), s = a-b*q ∧ a-b*q > 0,
+have WOP := explicit_WOP WOP_prop,
+cases WOP,
 
+sorry,
+end
 --  def
 theorem Euclidean_Algorithm_One_Step: ∀ (a b: ZZ), ∃ (q r :ZZ), a=b*q+r ∧ r < b := begin
 -- intros a b,

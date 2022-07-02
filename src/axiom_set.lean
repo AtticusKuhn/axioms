@@ -268,6 +268,9 @@ theorem one_pos : is_positive(1:O) := begin
   }
 end
 
+theorem trans_lt : ∀{a b c : O}, a < b → b <  c → a < c := begin
+sorry,
+end
 /-
   P8 Prove the transitivity of ≤ 
 -/

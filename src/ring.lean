@@ -1,7 +1,7 @@
 -- import data.set
 
 
-class has_group_notation (R : Type) extends has_mul R, has_add R, has_zero R, has_one R, has_neg R, has_dvd R
+class has_group_notation (R : Type) extends has_mul R, has_add R, has_zero R, has_one R, has_neg R, has_dvd R, has_sub R
 class ring (R : Type) extends has_group_notation R :=
   /- associativity of multiplication-/
   (mul_assoc : ∀ (a b c : R), a * b * c = a * (b * c))
@@ -22,6 +22,8 @@ class ring (R : Type) extends has_group_notation R :=
   (divs : ∀(a b :R), a ∣ b ↔ (∃ (c:R), a*c=b))
   /- -a is the inverse of a-/
   (add_neg : ∀(a : R), a + -a = 0)
+  (subtr : ∀(a : R), a - a = 0)
+
   -- (exp : ∀(a : R)( r: ℕ ), a^r = a*a^(r-1))
 
  
@@ -30,8 +32,8 @@ namespace ring
   class ordered_ring (R  : Type) extends ring R, has_lt R, has_le R
   class Integers (ZZ  : Type) extends   ordered_ring ZZ :=
     (WOP : ∀(proposition : ZZ → Prop), 
-    (∃ (some:ZZ), 
-    proposition(some) → (
+    ((∃ (some:ZZ), 
+    proposition(some)) → (
       ∃(minimal : ZZ), 
       proposition(minimal) ∧  
       ∀(other:ZZ), 
@@ -44,12 +46,12 @@ namespace ring
 
   theorem explicit_WOP: ∀(proposition : ZZ → Prop), 
     (∃ (some:ZZ), 
-    proposition(some) → (
+    proposition(some)) → (
       ∃(minimal : ZZ),
       proposition(minimal) ∧  
       ∀(other:ZZ), 
       proposition(other)→ minimal ≤ other
-    )) := begin
+    ) := begin
     exact Integers.WOP,
     end
 

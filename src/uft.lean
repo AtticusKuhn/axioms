@@ -142,6 +142,7 @@ theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
     },
     exact minmin_lt_1
   end,
+  cases others_right with others_left others_right,
   -- finally, this is a contradiction because we assumed min was the smallest element
   have min_le_minmin := others_right (min*min) nibzominmin,
   rw less_eq at min_le_minmin,
@@ -310,6 +311,7 @@ rw  ← neg_zero,
 rw neg_comp,
 exact b_posit,
  end,
+ cases min_smaller_other with x min_smaller_other,
  have min_contra := min_smaller_other (a - b * (q + 1)),
  have app_min  := min_contra prop_smaller,
  rw q_eq at app_min,
@@ -389,7 +391,9 @@ intros a b a_positive b_positive,
   cases WOP_exists with min min_smallest, 
   cases min_smallest with WOP_Min others_smaller,
   change (∃ (x' y' : ZZ), a*x' + b*y' = min) at WOP_Min,
-  have euclidean_min := Euclidean_Algorithm_One_Step_two a min a_positive,
+  -- have mo
+  cases others_smaller with min_pos stuff,
+  have euclidean_min := Euclidean_Algorithm_One_Step_two a min a_positive min_pos,
 
   sorry,
 end

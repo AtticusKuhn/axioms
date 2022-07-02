@@ -35,7 +35,7 @@ namespace ring
     ((∃ (some:ZZ), 
     proposition(some)) → (
       ∃(minimal : ZZ), 
-      proposition(minimal) ∧  
+      proposition(minimal) ∧ 
       ∀(other:ZZ), 
       proposition(other)→ minimal ≤ other
     )))
@@ -44,20 +44,22 @@ namespace ring
   variables { O : Type} [ordered_ring O ]
   variables { ZZ : Type} [Integers ZZ ]
 
-  theorem explicit_WOP: ∀(proposition : ZZ → Prop), 
-    (∃ (some:ZZ), 
-    proposition(some)) → (
-      ∃(minimal : ZZ),
-      proposition(minimal) ∧  
-      ∀(other:ZZ), 
-      proposition(other)→ minimal ≤ other
-    ) := begin
-    exact Integers.WOP,
-    end
+ 
 
   /-hacky way to define propositions as a black box -/
   def is_positive : (O) → Prop := begin
     sorry,
+  end
+  theorem explicit_WOP: ∀(proposition : ZZ → Prop), 
+    (∃ (some:ZZ), 
+    proposition(some)) → (
+      ∃(minimal : ZZ),
+      proposition(minimal) ∧ is_positive minimal ∧   
+      ∀(other:ZZ), 
+      proposition(other)→ minimal ≤ other
+    ) := begin
+    sorry,
+    -- exact Integers.WOP,
   end
   /- The positives are closed under multiplication -/
   axiom pos_times_pos:  ∀{ a b : O}, is_positive a → is_positive b → is_positive (a*b)

@@ -721,8 +721,12 @@ intros a b a_positive b_positive,
     exact eq2,
   },
   have d_div: d ∣ (a*x'+b*y'),{
-    
-    sorry
+    have dcons := gcd_def a b d,
+    cases dcons with useful junk, 
+    have keyd : gcd a b = d := by refl,
+    cases useful keyd,
+    cases right with r junk2,
+    exact divs_linear_combination x' y' left r,
   },
   have d_div_min: d ∣ min, {
     sorry,

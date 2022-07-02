@@ -50,7 +50,7 @@ split, {
 },
 end
 
-theorem divs_linear_combination: ∀(a b c d e:R ), a ∣ b → a ∣ c → a ∣ (b*d+c*e) := begin
+theorem divs_linear_combination: ∀{a b c: R}, ∀(d e:R ), a ∣ b → a ∣ c → a ∣ (b*d+c*e) := begin
 intros a b c d e f g,
   have o := div_mul a b d f,
   have t := div_mul a c e g,

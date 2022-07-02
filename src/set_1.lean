@@ -51,7 +51,12 @@ split, {
 end
 
 theorem divs_linear_combination: ∀(a b c d e:R ), a ∣ b → a ∣ c → a ∣ (b*d+c*e) := begin
-
+intros a b c d e f g,
+rw divs at f,
+rw divs at g,
+cases f,
+cases g,
+rw mul_right d at f_h,
 end
 
 theorem divs_trans : ∀ (a b c : R), a ∣ b → b ∣ c → a ∣ c := begin

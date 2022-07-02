@@ -38,11 +38,22 @@ end
 theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
   intros a b a_pos b_pos a_div_b,
   rw divs at a_div_b,
-  cases a_div_b,{
---  have p_pos : is_positive p := pos_div_pos a b
--- have eq : p*(a-1) +p = b,{
+  cases a_div_b with p eq,{
+ have p_pos  := pos_div_pos a b p a_pos b_pos eq,
 
--- },
+  have eq : p*(a-1) +p = b,{
+    rw subtr,
+      rw mul_add ,
+      rw mul_comm p (-1),
+rw mul_neg_one,
+rw add_assoc,
+rw add_comm (-p) (p),
+rw add_neg,
+rw add_zero,
+rw mul_comm,
+exact eq,
+  },
+
     sorry,
   },
  
@@ -743,6 +754,7 @@ intros a b a_positive b_positive,
     -- sorry,
   },
   have min_le_d: min ≤ d, {
+
     sorry,
   },
   have min_eq_d: min = d, {

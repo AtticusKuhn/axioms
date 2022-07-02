@@ -765,6 +765,16 @@ intros a b a_positive b_positive,
   have min_eq_d: min = d, {
       exact le_le_eq min d  min_le_d d_le_min,
   },
+  split, {
+    split, {
+        have final:a * x' + b * y' = d  := begin
+       rw min_eq_d,
+        sorry,
+        end,
+      sorry,
+    },
+    sorry,
+  },
   -- split,{
   --   split, {
 

@@ -6,32 +6,32 @@ variables {R : Type} [ring R]
 variables {O : Type} [ordered_ring O ]
 variables {ZZ : Type} [Integers ZZ ]
 
-theorem WOP_Contradiction: 
-  ∀ (proposition: ZZ → Prop),
-  ( ∀(minimal: ZZ), ∃(smaller: ZZ),
-  ¬proposition(minimal) → ¬proposition(smaller) 
-  ∧ smaller < minimal ) → (∀ (x : ZZ), 
-  proposition(x)) 
-  := begin
-  intros prop holds_for_smaller all,
-  by_contradiction,
-  -- let notprop: ∀(x:ZZ), x → Prop := ¬ proposition(x),
-  -- let f : ℕ → ℕ := λ n, n + 1,
+-- theorem WOP_Contradiction: 
+--   ∀ (proposition: ZZ → Prop),
+--   ( ∀(minimal: ZZ), ∃(smaller: ZZ),
+--   ¬proposition(minimal) → ¬proposition(smaller) 
+--   ∧ smaller < minimal ) → (∀ (x : ZZ), 
+--   proposition(x)) 
+--   := begin
+--   intros prop holds_for_smaller all,
+--   by_contradiction,
+--   -- let notprop: ∀(x:ZZ), x → Prop := ¬ proposition(x),
+--   -- let f : ℕ → ℕ := λ n, n + 1,
 
-  have  wop := WOP (λ x, ¬ prop(x)),
+--   have  wop := WOP (λ x, ¬ prop(x)),
 
-  -- cases wop,
+--   -- cases wop,
 
-  -- have wopp_thing :  (∃ (minimal : ZZ), ∀ (other : ZZ), (λ (x : ZZ), ¬prop x) other → minimal ≤ other) := begin
-  --   -- exact wop_h h,
-  --   -- intros a,
-  --   -- exact wop_h a,
-  -- end,
+--   -- have wopp_thing :  (∃ (minimal : ZZ), ∀ (other : ZZ), (λ (x : ZZ), ¬prop x) other → minimal ≤ other) := begin
+--   --   -- exact wop_h h,
+--   --   -- intros a,
+--   --   -- exact wop_h a,
+--   -- end,
 
-  -- cases wop_h,
-  -- have mins := wop_h (h),
-  sorry,
-end 
+--   -- cases wop_h,
+--   -- have mins := wop_h (h),
+--   sorry,
+-- end 
 theorem gcd_pos: ∀ (a b : ZZ), is_positive (gcd a b) := begin
 sorry,
 end
@@ -43,15 +43,15 @@ theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b →
 
   have eq : p*(a-1) +p = b,{
     rw subtr,
-      rw mul_add ,
-      rw mul_comm p (-1),
-rw mul_neg_one,
-rw add_assoc,
-rw add_comm (-p) (p),
-rw add_neg,
-rw add_zero,
-rw mul_comm,
-exact eq,
+    rw mul_add ,
+    rw mul_comm p (-1),
+    rw mul_neg_one,
+    rw add_assoc,
+    rw add_comm (-p) (p),
+    rw add_neg,
+    rw add_zero,
+    rw mul_comm,
+    exact eq,
   },
 
     sorry,

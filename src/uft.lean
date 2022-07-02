@@ -553,6 +553,16 @@ intros a b a_positive b_positive,
     have := stuff r wop_prop_r,
   },
   have r_is_0: r=0, {
+    cases ineq with r_lt_min zero_le_r,
+    rw less_eq at zero_le_r,
+    cases zero_le_r,{
+      rw pos_is_g0 at rnotpos,
+      rw not_le_ge at rnotpos,
+      rw less_eq at rnotpos,
+      cases rnotpos with zer les,{
+        have t := lt_trans zer zero_le_r,
+      },
+    },
     sorry,
   },
 

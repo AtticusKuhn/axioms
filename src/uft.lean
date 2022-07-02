@@ -535,7 +535,16 @@ intros a b a_positive b_positive,
   rw mul_comm at thing2,
   rw mul_add at thing2,
   have thing3 : r = a*(1-q*x')  +  (b *(q* y')), {
+
     sorry,
+  },
+  have rnotpos: ¬ (is_positive r), {
+    by_contradiction,
+    -- rw pos_is_g0 r at h,
+    sorry,
+  },
+  have r_is_0: r=0, {
+
   },
   -- have thing3 : r= a - a*x' - b*y'*q, {
   --   rw subtr at thing2,

@@ -404,10 +404,10 @@ is the smallest positive combination of $a,b$.
 -/
 theorem BezoutsLemma: ∀ (a b : ZZ), is_positive a → is_positive b → ∃ (x y : ZZ), a*x+b*y = gcd a b := begin
 intros a b a_positive b_positive,
-  let WOP_prop : ZZ → Prop := λ s, ∃ (x y : ZZ), a*x + b*y = s,
+  let WOP_prop : ZZ → Prop := λ s, ∃ (x y : ZZ), a*x + b*y = s ∧ is_positive s,
   have WOP := explicit_WOP WOP_prop,
   have WOP_a :  WOP_prop a, {
-    change (∃ (x y : ZZ), a*x + b*y = a),
+    change (∃ (x y : ZZ), a*x + b*y = a ∧ is_positive a),
     split, {
       split, {
         have a_works: a * 1 + b * 0 = a , {
@@ -428,6 +428,9 @@ intros a b a_positive b_positive,
   cases WOP_exists with min min_smallest, 
   cases min_smallest with WOP_Min others_smaller,
   change (∃ (x' y' : ZZ), a*x' + b*y' = min) at WOP_Min,
+  cases WOP_Min with x' rest,
+    cases rest with y' rest,
+
   -- have mo
   cases others_smaller with min_pos stuff,
   have euclidean_min := Euclidean_Algorithm_One_Step_two a min a_positive min_pos,
@@ -436,10 +439,20 @@ intros a b a_positive b_positive,
   cases eq with eq ineq,
   have thing:  r= a-min*q, {
     have rev : min * q + r = a, {symmetry,exact eq},
-
-    -- symmetry,
+    rw add_comm at rev,
     have m:= move rev,
-    -- rw move,
+    rw subtr,
+    exact m,
   },
+  have thing2:  r = a - (a*x' + b*y')*q, {
+    rw ← rest at thing,
+    exact thing,
+  },
+  rw mul_comm at thing2,
+  rw mul_add at thing2,
+  -- have thing3 : r= a - a*x' - b*y'*q, {
+  --   rw subtr at thing2,
+  --   rw dist_neg_add at thing2,
+  -- },
   sorry,
 end

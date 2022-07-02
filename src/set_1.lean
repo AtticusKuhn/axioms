@@ -50,6 +50,10 @@ split, {
 },
 end
 
+theorem divs_linear_combination: ∀(a b c d e:R ), a ∣ b → a ∣ c → a ∣ (b*d+c*e) := begin
+
+end
+
 theorem divs_trans : ∀ (a b c : R), a ∣ b → b ∣ c → a ∣ c := begin
 intros a b c d e,
 rw divs at d,

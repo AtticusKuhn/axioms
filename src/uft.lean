@@ -617,7 +617,7 @@ intros a b a_positive b_positive,
     sorry,
   },
   have min_le_d: min ≤ d, {
-sorry,
+    sorry,
   },
   have min_eq_d: min = d, {
       exact le_le_eq min d  min_le_d d_le_min,

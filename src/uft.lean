@@ -162,7 +162,22 @@ sorry,
 end
 theorem push_and: ∀{p q : Prop}, (¬ (p ∧ q)) ↔ (¬ p ∨ ¬ q):=
 begin
-sorry,
+  intros p q,
+  split,
+  {
+    intro hpq,
+    by_cases q,
+    {
+      left,
+      intro j,
+      apply hpq,
+      exact ⟨j, h⟩,
+    },
+    {
+      right,
+      exact h,
+    }
+  }
 end
 theorem not_le_ge: ∀{a b : O}, (¬ (a < b)) ↔ ( b ≤ a):=
 begin

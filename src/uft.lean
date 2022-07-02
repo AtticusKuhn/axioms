@@ -35,6 +35,29 @@ end
 theorem gcd_pos: ∀ (a b : ZZ), is_positive (gcd a b) := begin
 sorry,
 end
+theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
+  intros a b a_pos b_pos a_div_b,
+  rw divs at a_div_b,
+  cases a_div_b with p eq,{
+ have p_pos  := pos_div_pos a b p a_pos b_pos eq,
+
+  have eq : p*(a-1) +p = b,{
+    rw subtr,
+      rw mul_add ,
+      rw mul_comm p (-1),
+rw mul_neg_one,
+rw add_assoc,
+rw add_comm (-p) (p),
+rw add_neg,
+rw add_zero,
+rw mul_comm,
+exact eq,
+  },
+
+    sorry,
+  },
+ 
+end
 theorem pos_is_g0: ∀ (x:O), is_positive x ↔ 0< x := begin
 intros a,
 split, {
@@ -159,34 +182,6 @@ theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
   exact smaller,
   },
 end
-theorem pos_ge_one: ∀ (a :ZZ), is_positive a → 1 ≤ a := begin
-
-sorry,
-end
-theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
-  intros a b a_pos b_pos a_div_b,
-  rw divs at a_div_b,
-  cases a_div_b with p eq,{
- have p_pos  := pos_div_pos a b p a_pos b_pos eq,
-
-  have eq : p*(a-1) +p = b,{
-    rw subtr,
-      rw mul_add ,
-      rw mul_comm p (-1),
-rw mul_neg_one,
-rw add_assoc,
-rw add_comm (-p) (p),
-rw add_neg,
-rw add_zero,
-rw mul_comm,
-exact eq,
-  },
-
-    sorry,
-  },
- 
-end
-
 theorem le_le_eq: ∀( a b: O), a ≤ b → b ≤ a → a = b := begin
   intros d min d_le_min min_le_d,
   rw less_eq at d_le_min,
@@ -759,8 +754,14 @@ intros a b a_positive b_positive,
     -- sorry,
   },
   have min_le_d: min ≤ d, {
-
-    sorry,
+    have dcons := gcd_def a b d,
+    have keyd : gcd a b = d := by refl,
+    cases dcons with useful junk,
+    cases useful keyd,
+    cases right with junk2 u,
+    have fin := u min,
+    apply fin,
+    exact ⟨min_div_a, min_div_b⟩,
   },
   have min_eq_d: min = d, {
       exact le_le_eq min d  min_le_d d_le_min,

@@ -156,7 +156,24 @@ theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
   exact smaller,
   },
 end
-
+theorem le_le_eq: ∀( a b: O), a ≤ b → b ≤ a → a = b := begin
+  intros d min d_le_min min_le_d,
+  rw less_eq at d_le_min,
+    rw less_eq at  min_le_d,
+    cases d_le_min, {
+      cases min_le_d, {
+        have tr := trans_lt d_le_min min_le_d,
+        exfalso,
+        apply no_lt_self d,
+        exact tr,
+      },
+      rw ← min_le_d at d_le_min,
+       exfalso,
+        apply no_lt_self min,
+        exact d_le_min,
+    },
+    exact d_le_min,
+end
 theorem push_not_exists: ∀{x : Type}, ∀{p: x→ Prop}, (¬ (∃(q : x), p(q))) ↔ (∀ (q : x), ¬ p(q)):=
 begin
   intros x p,
@@ -603,23 +620,7 @@ intros a b a_positive b_positive,
 sorry,
   },
   have min_eq_d: min = d, {
-    rw less_eq at d_le_min,
-    rw less_eq at  min_le_d,
-    cases d_le_min, {
-      cases min_le_d, {
-        have tr := trans_lt d_le_min min_le_d,
-        exfalso,
-        apply no_lt_self d,
-        exact tr,
-        -- sorry,
-      },
-      rw ← min_le_d at d_le_min,
-       exfalso,
-        apply no_lt_self min,
-        exact d_le_min,
-    },
-    symmetry,
-    exact d_le_min,
+      exact le_le_eq min d  min_le_d d_le_min,
   },
   -- split,{
   --   split, {

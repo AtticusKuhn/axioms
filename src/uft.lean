@@ -32,6 +32,13 @@ theorem WOP_Contradiction:
   -- have mins := wop_h (h),
   sorry,
 end 
+theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
+  intros a b a_pos b_pos a_div_b,
+  have p_pos : is_positive  := pos_div_pos
+have eq : p*(a-1) +p = b,{
+
+},
+end
 theorem pos_is_g0: ∀ (x:O), is_positive x ↔ 0< x := begin
 intros a,
 split, {

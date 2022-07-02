@@ -612,7 +612,12 @@ intros a b a_positive b_positive,
   },
   let d:ZZ  := gcd a b,
   have min_div_a : min ∣ a,{
-    sorry
+    rw r_is_0 at eq,
+    rw add_zero at eq,
+    rw divs,
+    split,
+    symmetry,
+    exact eq,
   },
    have min_div_b : min ∣ b,{
     sorry

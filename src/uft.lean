@@ -350,6 +350,22 @@ begin
   right, 
   refl,
 end
+theorem sub_both_lt: ∀(a b x: O), ((a <  b)) ↔ ( a-x < b-x):=
+begin
+sorry,
+end
+theorem min_1_lt_self: ∀ (x: O), x-1 < x := begin
+intro x,
+rw less_than,
+use 1,
+split,
+exact one_pos,
+rw subtr,
+rw add_assoc,
+rw add_comm (-1:O),
+rw add_neg,
+rw add_zero,
+end
 theorem sub_both_le: ∀(a b x: O), ((a ≤  b)) ↔ ( a-x ≤ b-x):=
 begin
   intros a b x,
@@ -1089,44 +1105,28 @@ theorem EuclidsLemma: ∀ (f : ZZ → ZZ), ∀(p n:ZZ), is_prime p → p ∣ (pi
 intros f p n prime_p p_div_pi,
   let WOP_prop : ZZ → Prop := λ n, p ∣ (pi 0 n f) →   (∃ (k : ZZ), (p ∣ f k)),
   have wop_contra := WOP_Contradiction WOP_prop,
-  -- apply  wop_contra,
   have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
+  -- assume there is some minimal m for which Euclid's Lemma Doesn't Hold
   intros minimal,
-  split,{
+  -- we are going to show that Euclid's Lemma doesn't hold for m-1
+  use (minimal-1),
+  -- introduce the proposition that Euclid's Lemma doesn't hold on m
     intros nminimal,
+
      have x := IHateLogic nminimal,
      rw push_not_exists at x,
      rw pi_diff at x,
-     have zjhchas := prime_divs p (f minimal) (pi 0 (minimal - 1) f) prime_p,
-  {
+     have pos_f:is_positive (f minimal) :=sorry,
 
-sorry,
-  },
-    --  rw prime_divs at x,
-    -- rw push_and at nminimal,
-    -- rw push_not_exists at nminimal,
-    -- have bruh := push_and ,
-    -- {
+     have zjhchas := prime_divs p (f minimal) (pi 0 (minimal - 1) f) prime_p pos_f ,
+     split,{
+intro prop_mminimal,
 
-    --   sorry,
-    -- },
-
-    -- change (¬ (
-    --   (p ∣ (pi 0 minimal f))
-    --    ∧ 
-    --     ∃ (k : ZZ), p ∣ f k
-    -- )) at minimal,
-
-    sorry,
-    sorry,
-    sorry,
-  },
   sorry,
+     },
+     exact min_1_lt_self minimal,
   end,
   have w := wop_contra wop_inside n p_div_pi,
 exact w,
-  -- sorry, 
-  -- cases w with l r,
-  -- exact r,
 end 
 

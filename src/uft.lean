@@ -1078,11 +1078,55 @@ rw prime,
  sorry,
  
 end
+theorem IHateLogic: ∀ {p q :Prop}, ¬ (p → q) → p → (¬ q) := begin
+intros p q npq p,
+by_contradiction,
+apply npq,
+intro a,
+exact h,
+end
 theorem EuclidsLemma: ∀ (f : ZZ → ZZ), ∀(p n:ZZ), is_prime p → p ∣ (pi 0 n f) → (∃(k:ZZ), p ∣ (f k)) := begin
 intros f p n prime_p p_div_pi,
-  let WOP_prop : ZZ → Prop := λ n, p ∣ (pi 0 n f) ∧ (∀  (k:ZZ), ¬(p ∣ (f k))),
+  let WOP_prop : ZZ → Prop := λ n, p ∣ (pi 0 n f) →   (∃ (k : ZZ), (p ∣ f k)),
   have wop_contra := WOP_Contradiction WOP_prop,
-  
+  -- apply  wop_contra,
+  have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
+  intros minimal,
+  split,{
+    intros nminimal,
+     have x := IHateLogic nminimal,
+     rw push_not_exists at x,
+     rw pi_diff at x,
+     have zjhchas := prime_divs p (f minimal) (pi 0 (minimal - 1) f) prime_p,
+  {
+
 sorry,
+  },
+    --  rw prime_divs at x,
+    -- rw push_and at nminimal,
+    -- rw push_not_exists at nminimal,
+    -- have bruh := push_and ,
+    -- {
+
+    --   sorry,
+    -- },
+
+    -- change (¬ (
+    --   (p ∣ (pi 0 minimal f))
+    --    ∧ 
+    --     ∃ (k : ZZ), p ∣ f k
+    -- )) at minimal,
+
+    sorry,
+    sorry,
+    sorry,
+  },
+  sorry,
+  end,
+  have w := wop_contra wop_inside n p_div_pi,
+exact w,
+  -- sorry, 
+  -- cases w with l r,
+  -- exact r,
 end 
 

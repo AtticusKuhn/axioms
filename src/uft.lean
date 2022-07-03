@@ -7,32 +7,38 @@ variables {R : Type} [myRing R]
 variables {O : Type} [ordered_ring O ]
 variables {ZZ : Type} [Integers ZZ ]
 
--- theorem WOP_Contradiction: 
---   ∀ (proposition: ZZ → Prop),
---   ( ∀(minimal: ZZ), ∃(smaller: ZZ),
---   ¬proposition(minimal) → ¬proposition(smaller) 
---   ∧ smaller < minimal ) → (∀ (x : ZZ), 
---   proposition(x)) 
---   := begin
---   intros prop holds_for_smaller all,
---   by_contradiction,
---   -- let notprop: ∀(x:ZZ), x → Prop := ¬ proposition(x),
---   -- let f : ℕ → ℕ := λ n, n + 1,
-
---   have  wop := WOP (λ x, ¬ prop(x)),
-
---   -- cases wop,
-
---   -- have wopp_thing :  (∃ (minimal : ZZ), ∀ (other : ZZ), (λ (x : ZZ), ¬prop x) other → minimal ≤ other) := begin
---   --   -- exact wop_h h,
---   --   -- intros a,
---   --   -- exact wop_h a,
---   -- end,
-
---   -- cases wop_h,
---   -- have mins := wop_h (h),
---   sorry,
--- end 
+theorem WOP_Contradiction: 
+  ∀ (proposition: ZZ → Prop),
+  ( ∀(minimal: ZZ), ∃(smaller: ZZ),
+  ¬proposition(minimal) → ¬proposition(smaller) 
+  ∧ smaller < minimal ) → (∀ (x : ZZ), 
+  proposition(x)) 
+  := begin
+  intros prop holds_for_smaller all,
+  by_contradiction,
+  have  wop := WOP (λ x, ¬ prop(x)),
+  have wopsome: ∃ (some : ZZ), (λ (x : ZZ), ¬prop x) some := begin
+  use all,
+  end,
+  have wop_holds := wop wopsome,
+  cases wop_holds with minimal rest,
+  cases rest with nminimal other,
+  have smaller := holds_for_smaller minimal,
+  cases smaller with smaller smallereq,
+  have contra := smallereq nminimal,
+  cases contra with not_smaller smaller_lt_minimal,
+  -- cases smallereq with _ smaller_lt_minimal,
+  have min_le_smaller := other smaller not_smaller,
+  rw less_eq at min_le_smaller,
+  cases min_le_smaller, {
+    have tr := trans_lt smaller_lt_minimal min_le_smaller,
+    apply no_lt_self smaller,
+    exact tr,
+  },
+  rw min_le_smaller at smaller_lt_minimal,
+      apply no_lt_self smaller,
+exact smaller_lt_minimal,
+end 
 theorem gcd_pos: ∀ (a b : ZZ), is_positive (gcd a b) := begin
 sorry,
 end
@@ -1075,7 +1081,8 @@ end
 theorem EuclidsLemma: ∀ (f : ZZ → ZZ), ∀(p n:ZZ), is_prime p → p ∣ (pi 0 n f) → (∃(k:ZZ), p ∣ (f k)) := begin
 intros f p n prime_p p_div_pi,
   let WOP_prop : ZZ → Prop := λ n, p ∣ (pi 0 n f) ∧ (∀  (k:ZZ), ¬(p ∣ (f k))),
-  -- have wop_contra := WOP_contradiction
+  have wop_contra := WOP_Contradiction WOP_prop,
+  
 sorry,
 end 
 

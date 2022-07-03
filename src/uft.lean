@@ -964,12 +964,56 @@ axiom pi_same: ∀{x :ZZ}, ∀{f : ZZ → ZZ}, pi x x f = f x
 axiom pi_diff: ∀{x y :ZZ}, ∀{f : ZZ → ZZ}, pi x y f = (f y) * (pi x (y -1) f)
 
 axiom is_prime:  ZZ → Prop
-axiom prime:∀ (n:ZZ), is_prime n ↔ is_positive n ∧ (∀(d:ZZ), is_positive d →  d ∣ n →  (d=1 ∨ d=n))
+axiom prime:
+  ∀ (n:ZZ),
+    is_prime n 
+    ↔ is_positive n ∧ 
+    (∀(d:ZZ), 
+      is_positive d →  
+      d ∣ n →  (d=1 ∨ d=n))
 
 theorem twoPositive: is_positive (2:ZZ) := begin
 exact pos_plus_pos one_pos one_pos,
 end
+theorem zle1: (0:ZZ) ≤ (1:ZZ) := begin
+rw less_eq,
+left,
+rw less_than,
+use 1,
+split,
+exact one_pos,
+rw zero_add,
+end
+theorem npos_le_0: ∀(x:ZZ), ¬(is_positive x) ↔ x ≤ 0 := begin
+intro x,
 
+split,{
+  intro np,
+  have := not_le_ge ,
+  cases this,
+  apply this_mp,
+  have p := pos_is_g0 x,
+  by_contradiction,
+  cases p,
+  have := p_mpr h,
+  apply np,
+  exact this,
+},
+intro zlex,
+rw less_eq at zlex,
+cases zlex,{
+    have p := pos_is_g0 x,
+cases p,
+by_contradiction,
+-- 
+have := p_mp h,
+have := trans_lt zlex this,
+apply no_lt_self x,
+exact this,
+},
+rw zlex,
+exact nontriviality,
+end
 theorem prime_gcd: ∀ (p a : ZZ),is_positive a →  is_prime p → ¬ (p ∣ a) → gcd p a = 1 := begin
   intros  p a  a_pos pprime ndiv,
   have gcdax := gcd_def p a 1,
@@ -984,11 +1028,12 @@ theorem prime_gcd: ∀ (p a : ZZ),is_positive a →  is_prime p → ¬ (p ∣ a)
   cases ddiv with dlp dla,
   cases pprime with ppos pprime,
   have dprime := pprime d,
-  have dpos : is_positive d,{
+  by_cases (is_positive d),{
+--   have dpos : is_positive d,{
 
-sorry,
-  },
-  have x:= dprime dpos dlp,
+-- sorry,
+--   },
+  have x:= dprime h dlp,
   cases x with deq1 deqp,{
     rw deq1,
     exact refl_le 1,
@@ -997,6 +1042,14 @@ sorry,
   apply ndiv,
   rw ← deqp,
   exact dla,
+  },
+  have := npos_le_0 d,
+  rw this at h,
+  have zle := zle1,
+{
+  have lt := trans_le h zle,
+  exact lt,
+},
 end
 theorem prime_divs: ∀(p a b:ZZ), is_prime p → p ∣ (a*b) → (p ∣ a ∨ p ∣ b) := begin
 intros p a b p_prime p_divs_ab,

@@ -964,18 +964,52 @@ axiom pi_same: ∀{x :ZZ}, ∀{f : ZZ → ZZ}, pi x x f = f x
 axiom pi_diff: ∀{x y :ZZ}, ∀{f : ZZ → ZZ}, pi x y f = (f y) * (pi x (y -1) f)
 
 axiom is_prime:  ZZ → Prop
-axiom prime:∀ (n:ZZ), is_prime n ↔ (∀(d:ZZ), is_positive d →  d ∣ n →  (d=1 ∨ d=n))
+axiom prime:∀ (n:ZZ), is_prime n ↔ is_positive n ∧ (∀(d:ZZ), is_positive d →  d ∣ n →  (d=1 ∨ d=n))
 
 theorem twoPositive: is_positive (2:ZZ) := begin
 exact pos_plus_pos one_pos one_pos,
 end
 
+theorem prime_gcd: ∀ (p a : ZZ),is_positive a →  is_prime p → ¬ (p ∣ a) → gcd p a = 1 := begin
+  intros  p a  a_pos pprime ndiv,
+  have gcdax := gcd_def p a 1,
+  have primedef := prime p,
+  rw primedef at pprime,
+  rw gcdax,
+  split,
+  exact div_one p,
+  split,
+  exact div_one a,
+  intros d ddiv,
+  cases ddiv with dlp dla,
+  cases pprime with ppos pprime,
+  have dprime := pprime d,
+  have dpos : is_positive d,{
+
+sorry,
+  },
+  have x:= dprime dpos dlp,
+  cases x with deq1 deqp,{
+    rw deq1,
+    exact refl_le 1,
+  },
+  exfalso,
+  apply ndiv,
+  rw ← deqp,
+  exact dla,
+end
+theorem prime_divs: ∀(p a b:ZZ), is_prime p → p ∣ (a*b) → (p ∣ a ∨ p ∣ b) := begin
+intros p a b p_prime p_divs_ab,
+-- have gcd : gcd p a = 1
+sorry,
+end
+
 theorem twoPrime: is_prime (2:ZZ) := begin
 rw prime,
-intros d dp dd2,
-rw divs at dd2,
-rcases dd2 with ⟨a ,b ⟩,
-have a_pos := pos_div_pos d 2 a dp  twoPositive b ,
+-- intros d dp dd2,
+-- rw divs at dd2,
+-- rcases dd2 with ⟨a ,b ⟩,
+-- have a_pos := pos_div_pos d 2 a dp  twoPositive b ,
 
  sorry,
  

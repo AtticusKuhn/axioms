@@ -18,6 +18,12 @@ begin
   exact this ,
 
 end
+theorem div_one: ∀ (a :R), 1 ∣ a := begin
+intro a,
+rw divs,
+use a,
+rw one_mul,
+end 
 
 theorem div_mul : ∀ (a b c :R), a ∣ b → a ∣  b*c := begin
 intros a b c d,

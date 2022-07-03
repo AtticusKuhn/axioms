@@ -1029,10 +1029,6 @@ theorem prime_gcd: ∀ (p a : ZZ),is_positive a →  is_prime p → ¬ (p ∣ a)
   cases pprime with ppos pprime,
   have dprime := pprime d,
   by_cases (is_positive d),{
---   have dpos : is_positive d,{
-
--- sorry,
---   },
   have x:= dprime h dlp,
   cases x with deq1 deqp,{
     rw deq1,
@@ -1051,10 +1047,19 @@ theorem prime_gcd: ∀ (p a : ZZ),is_positive a →  is_prime p → ¬ (p ∣ a)
   exact lt,
 },
 end
-theorem prime_divs: ∀(p a b:ZZ), is_prime p → p ∣ (a*b) → (p ∣ a ∨ p ∣ b) := begin
-intros p a b p_prime p_divs_ab,
--- have gcd : gcd p a = 1
-sorry,
+theorem prime_divs: ∀(p a b:ZZ), is_prime p → is_positive a → p ∣ (a*b) → (p ∣ a ∨ p ∣ b) := begin
+intros p a b p_prime a_pos p_divs_ab,
+  by_cases (p ∣ a),{
+    left,
+    exact h,
+  },
+ 
+  have  gcd1 := prime_gcd p a a_pos p_prime h,
+   rw prime at p_prime,
+  cases p_prime,
+  have p_divides_b := Fundamental_Lemma p a b p_divs_ab gcd1 p_prime_left a_pos,
+  right,
+  exact p_divides_b,
 end
 
 theorem twoPrime: is_prime (2:ZZ) := begin

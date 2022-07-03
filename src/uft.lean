@@ -958,20 +958,32 @@ rw divs,
 use (x * c + p * y),
 exact mulled,
 end
-axiom pi: ZZ → ZZ → (ZZ → R) → R
+axiom pi: ZZ → ZZ → (ZZ → ZZ) →ZZ
 
-axiom pi_same: ∀{x :ZZ}, ∀{f : ZZ → R}, pi x x f = f x 
-axiom pi_diff: ∀{x y :ZZ}, ∀{f : ZZ → R}, pi x y f = (f y) * (pi x (y -1) f)
+axiom pi_same: ∀{x :ZZ}, ∀{f : ZZ → ZZ}, pi x x f = f x 
+axiom pi_diff: ∀{x y :ZZ}, ∀{f : ZZ → ZZ}, pi x y f = (f y) * (pi x (y -1) f)
 
 axiom is_prime:  ZZ → Prop
 axiom prime:∀ (n:ZZ), is_prime n ↔ (∀(d:ZZ), is_positive d →  d ∣ n →  (d=1 ∨ d=n))
+
+theorem twoPositive: is_positive (2:ZZ) := begin
+exact pos_plus_pos one_pos one_pos,
+end
 
 theorem twoPrime: is_prime (2:ZZ) := begin
 rw prime,
 intros d dp dd2,
 rw divs at dd2,
 rcases dd2 with ⟨a ,b ⟩,
+have a_pos := pos_div_pos d 2 a dp  twoPositive b ,
+
  sorry,
+ 
 end
--- theorem EuclidsLemma: ∀ ()
+theorem EuclidsLemma: ∀ (f : ZZ → ZZ), ∀(p n:ZZ), is_prime p → p ∣ (pi 0 n f) → (∃(k:ZZ), p ∣ (f k)) := begin
+intros f p n prime_p p_div_pi,
+  let WOP_prop : ZZ → Prop := λ n, p ∣ (pi 0 n f) ∧ (∀  (k:ZZ), ¬(p ∣ (f k))),
+  -- have wop_contra := WOP_contradiction
+sorry,
+end 
 

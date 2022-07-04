@@ -1101,8 +1101,9 @@ apply npq,
 intro a,
 exact h,
 end
-theorem EuclidsLemma: ∀ (f : ZZ → ZZ), ∀(p n:ZZ), is_prime p → p ∣ (pi 0 n f) → (∃(k:ZZ), p ∣ (f k)) := begin
-intros f p n prime_p p_div_pi,
+
+theorem EuclidsLemma: ∀ (f : ZZ → ZZ), ∀(p n:ZZ), is_prime p → (∀ (x:ZZ), is_positive (f x)) →  p ∣ (pi 0 n f) → (∃(k:ZZ), p ∣ (f k)) := begin
+intros f p n prime_p always_pos p_div_pi,
   let WOP_prop : ZZ → Prop := λ n, p ∣ (pi 0 n f) →   (∃ (k : ZZ), (p ∣ f k)),
   have wop_contra := WOP_Contradiction WOP_prop,
   have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
@@ -1116,15 +1117,36 @@ intros f p n prime_p p_div_pi,
      have x := IHateLogic nminimal,
      rw push_not_exists at x,
      rw pi_diff at x,
-     have pos_f:is_positive (f minimal) :=sorry,
-
+     have pos_f:is_positive (f minimal) :=begin
+  exact always_pos minimal,
+     end,
      have zjhchas := prime_divs p (f minimal) (pi 0 (minimal - 1) f) prime_p pos_f ,
      split,{
 intro prop_mminimal,
+change ( p ∣ (pi 0  (minimal-1 ) f) →   (∃ (k : ZZ), (p ∣ f k))) at  prop_mminimal,
+-- have test := wop_contra minimal (minimal-1),
+-- apply x,
+apply nminimal,
+{
+change ( p ∣ (pi 0  (minimal ) f) →   (∃ (k : ZZ), (p ∣ f k))),
+intro holds_min,
+rw ← pi_diff at zjhchas ,
+rw ← pi_diff at x ,
 
-  sorry,
+have holder := zjhchas holds_min,
+have holderx := x holds_min,
+cases holder, {
+  have contrdict_thing := holderx minimal,
+  exfalso,
+  apply contrdict_thing,
+  exact holder,
+},
+have thing := prop_mminimal holder,
+exact thing,
+
+},
      },
-     exact min_1_lt_self minimal,
+    exact min_1_lt_self minimal,
   end,
   have w := wop_contra wop_inside n p_div_pi,
 exact w,

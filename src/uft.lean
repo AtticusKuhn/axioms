@@ -1,6 +1,8 @@
 import .myRing
 import .set_1
 import tactic.basic
+import init.default
+import logic.basic
 -- import tactic
 open myRing
 variables {R : Type} [myRing R]
@@ -1186,8 +1188,8 @@ exact thing,
 exact w,
 end 
 
-theorem composite_has_fact: ∀(x:ZZ), ¬ (is_prime x) → (∃(d:ZZ), d ∣ x ∧ d ≠ 1 ∧ d ≠ x) := begin
-intros x not_prime,
+theorem composite_has_fact: ∀(x:ZZ), is_positive x →  ¬ (is_prime x) → (∃(d:ZZ), d ∣ x ∧ d ≠ 1 ∧ d ≠ x) := begin
+intros  x pos not_prime,
 by_contradiction,
 rw push_not_exists at h,
 -- rw push_and at h,
@@ -1196,7 +1198,7 @@ rw prime x,
 -- intros pos
 split,
 {
-sorry,
+  exact pos,
 },
 intros d dpos ddivx,
 have := h d,
@@ -1227,6 +1229,24 @@ exact div_self minimal,
   },
 },
 exact minimal,
+end,
+  have w := wop_contra wop_inside  x,
+exact w,
+end
+theorem All_Integers_Have_Prime_Repr: ∀(x:ZZ), ∃ (f:ZZ → ZZ),∃(n:ZZ), (∀ (i:ZZ), is_prime (f i) ) → pi 0 n f = x := begin
+intros x,
+    let WOP_prop : ZZ → Prop := λ x,  ∃ (f:ZZ → ZZ),∃(n:ZZ), (∀ (i:ZZ), is_prime (f i) ) → pi 0 n f = x ,
+
+ have wop_contra := WOP_Contradiction WOP_prop,
+  have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
+  intros min,
+  split, {
+    intros nmin,
+    change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = min)) at nmin,
+    rw push_neg.not_exists_eq at nmin,
+sorry,
+  },
+sorry,
 end,
   have w := wop_contra wop_inside  x,
 exact w,

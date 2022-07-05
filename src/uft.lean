@@ -1209,26 +1209,69 @@ split,
 exact ddivx,
 exact dm,
 end
+-- theorem negprime: ∀ (x:ZZ), is_prime x → is_prime (-x) := begin
+-- intros x p,
+-- rw prime,
 
-theorem All_Integers_Have_Prime_Factor: ∀(x:ZZ), ∃ (p:ZZ), is_prime p → p ∣ x := begin
+-- sorry,
+-- end
+theorem composite_has_fact2: ∀(x:ZZ),  ¬ (is_prime x) → (∃(d:ZZ), d ∣ x ∧ d ≠ 1 ∧ d ≠ x) := begin
+intros x np,
+have trich := trichotomy x,
+rcases trich with  ⟨a ,b,c   ⟩  ,{
+  
+sorry,
+},
+rcases trich with  ⟨a,b,c   ⟩  ,{
+  sorry,
+},
+rcases trich with  ⟨a,b,c   ⟩  ,{
+
+  sorry,
+},
+-- sorry,
+end
+
+theorem All_Integers_Have_Prime_Factor: ∀(x:ZZ), ∃ (p:ZZ), (is_prime p ∧  p ∣ x) := begin
   intros x,
-    let WOP_prop : ZZ → Prop := λ x, ∃(p:ZZ), is_prime p → p ∣ x,
+    let WOP_prop : ZZ → Prop := λ x, ∃(p:ZZ), is_prime p ∧  p ∣ x,
   have wop_contra := WOP_Contradiction WOP_prop,
   have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
   intros minimal,
 split,{
   intro not_min,
-  change (¬  (∃(p:ZZ), is_prime p → p ∣ minimal)) at not_min,
+  change (¬  (∃(p:ZZ), is_prime p ∧ p ∣ minimal)) at not_min,
   rw push_not_exists at not_min,
   have nminimal := not_min minimal,
   push_neg at nminimal,
-  cases nminimal, {
-exfalso,
-apply nminimal_right,
-exact div_self minimal,
-  },
+  have cp_nminimal: minimal ∣ minimal → ¬ is_prime minimal := begin
+  contrapose!,
+  exact nminimal,
+  end,
+  have thing := cp_nminimal (div_self minimal),
+  have bruh := composite_has_fact minimal,
+
+
+-- change ()
+  -- contrapose nminimal,
+-- exfalso,
+-- apply nminimal,
+-- exact (div_self minimal),
+-- have x :=not_min minimal,
+sorry,
+
+-- sorry,
+--   cases nminimal, {
+-- exfalso,
+-- apply nminimal_right,
+-- exact div_self minimal,
+--   },
+-- sorry,
+
+-- sorry,
 },
-exact minimal,
+sorry,
+-- exact minimal,
 end,
   have w := wop_contra wop_inside  x,
 exact w,
@@ -1240,13 +1283,33 @@ intros x,
  have wop_contra := WOP_Contradiction WOP_prop,
   have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
   intros min,
-  split, {
-    intros nmin,
-    change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = min)) at nmin,
-    rw push_neg.not_exists_eq at nmin,
+  have prime_fac_min := All_Integers_Have_Prime_Factor min,
+  cases prime_fac_min with p pdivs,
+  cases pdivs with p_is_prime p_divides_minimal,
+    rw divs at p_divides_minimal,
+cases p_divides_minimal with c cp_eq_min,
+  use c,
+  intro nmin,
+      change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = min)) at nmin,
+      split,{
+            change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = c)),
+by_contradiction,
+apply nmin,
+rcases h with  ⟨f, n, all⟩, 
 sorry,
-  },
-sorry,
+      },
+
+  sorry,
+--   split, {
+--     intros nmin,
+--     change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = min)) at nmin,
+--     rw push_neg.not_exists_eq at nmin,
+--     -- rw push_neg.not_exists_eq at nmin,
+--     -- change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = ?m_1)) at nmin,
+
+-- sorry,
+--   },
+-- sorry,
 end,
   have w := wop_contra wop_inside  x,
 exact w,

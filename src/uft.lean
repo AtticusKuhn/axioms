@@ -39,9 +39,7 @@ theorem WOP_Contradiction:
       apply no_lt_self smaller,
 exact smaller_lt_minimal,
 end 
-theorem gcd_pos: ∀ (a b : ZZ), is_positive (gcd a b) := begin
-sorry,
-end
+
 theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
   intros a b a_pos b_pos a_div_b,
   rw divs at a_div_b,
@@ -87,7 +85,53 @@ exact la_h_left,
 },
 },
 end
-
+theorem zlt1: (0:ZZ) < (1:ZZ) := begin
+rw less_than,
+-- left,
+-- rw less_than,
+use 1,
+split,
+exact one_pos,
+rw zero_add,
+end
+theorem ge1pos: ∀ (x:ZZ), 1 ≤ x → is_positive x := begin 
+intros x olex,
+rw pos_is_g0,
+rw less_eq at olex,
+cases olex,{
+have g : (0:ZZ) < 1, {
+  exact zlt1,
+},
+have := trans_lt g olex,
+exact this,
+},
+rw ← olex,
+exact zlt1,
+end
+theorem gcd_pos: ∀ (a b : ZZ), is_positive (gcd a b) := begin
+intros a b,
+let d :ZZ := gcd a b,
+-- rw d,
+have := gcd_def a b d ,
+have thing : gcd a b =d := begin
+refl,
+end,
+rw this at thing,
+rcases thing with ⟨diva,divb, biggest⟩,  
+have big : 1 ≤ d := begin
+have biggerthan1:= biggest 1,
+have divboth: 1 ∣ a ∧ 1 ∣ b, {
+exact ⟨ div_one a,div_one b⟩ 
+},
+have bruh := biggerthan1 divboth,
+exact bruh,
+end,
+have thing2 : gcd a b =d := begin
+refl,
+end,
+rw thing2,
+exact ge1pos d big,
+end
 
 theorem Euclidean_Algorithm_Exists: ∀ (a b: ZZ), ∃ (q r :ZZ), a=b*q+r := begin
 intros a b,
@@ -1006,6 +1050,7 @@ split,
 exact one_pos,
 rw zero_add,
 end
+
 theorem npos_le_0: ∀(x:ZZ), ¬(is_positive x) ↔ x ≤ 0 := begin
 intro x,
 
@@ -1084,16 +1129,7 @@ intros p a b p_prime a_pos p_divs_ab,
   exact p_divides_b,
 end
 
-theorem twoPrime: is_prime (2:ZZ) := begin
-rw prime,
--- intros d dp dd2,
--- rw divs at dd2,
--- rcases dd2 with ⟨a ,b ⟩,
--- have a_pos := pos_div_pos d 2 a dp  twoPositive b ,
 
- sorry,
- 
-end
 theorem IHateLogic: ∀ {p q :Prop}, ¬ (p → q) → p → (¬ q) := begin
 intros p q npq p,
 by_contradiction,
@@ -1124,8 +1160,6 @@ intros f p n prime_p always_pos p_div_pi,
      split,{
 intro prop_mminimal,
 change ( p ∣ (pi 0  (minimal-1 ) f) →   (∃ (k : ZZ), (p ∣ f k))) at  prop_mminimal,
--- have test := wop_contra minimal (minimal-1),
--- apply x,
 apply nminimal,
 {
 change ( p ∣ (pi 0  (minimal ) f) →   (∃ (k : ZZ), (p ∣ f k))),
@@ -1152,3 +1186,48 @@ exact thing,
 exact w,
 end 
 
+theorem composite_has_fact: ∀(x:ZZ), ¬ (is_prime x) → (∃(d:ZZ), d ∣ x ∧ d ≠ 1 ∧ d ≠ x) := begin
+intros x not_prime,
+by_contradiction,
+rw push_not_exists at h,
+-- rw push_and at h,
+apply not_prime,
+rw prime x,
+-- intros pos
+split,
+{
+sorry,
+},
+intros d dpos ddivx,
+have := h d,
+by_contradiction f,
+have dm := demorgan (d = 1) (d=x) f,
+apply this,
+split,
+exact ddivx,
+exact dm,
+end
+
+theorem All_Integers_Have_Prime_Factor: ∀(x:ZZ), ∃ (p:ZZ), is_prime p → p ∣ x := begin
+  intros x,
+    let WOP_prop : ZZ → Prop := λ x, ∃(p:ZZ), is_prime p → p ∣ x,
+  have wop_contra := WOP_Contradiction WOP_prop,
+  have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
+  intros minimal,
+split,{
+  intro not_min,
+  change (¬  (∃(p:ZZ), is_prime p → p ∣ minimal)) at not_min,
+  rw push_not_exists at not_min,
+  have nminimal := not_min minimal,
+  push_neg at nminimal,
+  cases nminimal, {
+exfalso,
+apply nminimal_right,
+exact div_self minimal,
+  },
+},
+exact minimal,
+end,
+  have w := wop_contra wop_inside  x,
+exact w,
+end

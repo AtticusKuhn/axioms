@@ -1304,7 +1304,22 @@ split,{
 cases bruh with d deq,{
 
   rcases deq with ⟨ a,b,c⟩, 
-  
+  rw divs at a,
+  rcases a with  ⟨ divisor, divides⟩ ,
+split,{
+  have br : ¬WOP_prop divisor := begin
+
+sorry,
+  end,
+-- use divisor,
+  -- exact br,
+
+sorry,
+},
+have x: divisor < minimal,{
+sorry,
+},
+-- exact x,
 sorry,
 },
 
@@ -1350,10 +1365,26 @@ cases p_divides_minimal with c cp_eq_min,
       change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = min)) at nmin,
       split,{
             change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = c)),
+
 by_contradiction,
 apply nmin,
 rcases h with  ⟨f, n, all⟩, 
+-- let g (x : ZZ) : ZZ
+--   | g 0 := p
+--   | g x := f x
+-- use f,
+-- use n,
+
+-- split,{
+--   split, {
+--     intro thing,
+
+-- sorry,
+--   },
+-- sorry,
+-- },
 sorry,
+-- sorry,
       },
 
   sorry,

@@ -41,30 +41,6 @@ theorem WOP_Contradiction:
       apply no_lt_self smaller,
 exact smaller_lt_minimal,
 end 
-
-theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
-  intros a b a_pos b_pos a_div_b,
-  rw divs at a_div_b,
-  cases a_div_b with p eq,{
- have p_pos  := pos_div_pos a b p a_pos b_pos eq,
-
-  have eq : p*(a-1) +p = b,{
-    rw subtr,
-    rw mul_add ,
-    rw mul_comm p (-1),
-    rw mul_neg_one,
-    rw add_assoc,
-    rw add_comm (-p) (p),
-    rw add_neg,
-    rw add_zero,
-    rw mul_comm,
-    exact eq,
-  },
-
-    sorry,
-  },
- 
-end
 theorem pos_is_g0: ∀ (x:O), is_positive x ↔ 0< x := begin
 intros a,
 split, {
@@ -96,6 +72,7 @@ split,
 exact one_pos,
 rw zero_add,
 end
+
 theorem ge1pos: ∀ (x:ZZ), 1 ≤ x → is_positive x := begin 
 intros x olex,
 rw pos_is_g0,
@@ -110,6 +87,40 @@ exact this,
 rw ← olex,
 exact zlt1,
 end
+theorem posge1: ∀ (x:ZZ),  is_positive x → 1 ≤ x := begin 
+intros x posx,
+rw less_eq,
+have :=pos_is_g0 x,
+cases this,
+have := this_mp posx,
+sorry,
+end
+
+theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
+  intros a b a_pos b_pos a_div_b,
+  rw divs at a_div_b,
+  cases a_div_b with p eq,{
+ have p_pos  := pos_div_pos a b p a_pos b_pos eq,
+
+  have eq : p*(a-1) +p = b,{
+    rw subtr,
+    rw mul_add ,
+    rw mul_comm p (-1),
+    rw mul_neg_one,
+    rw add_assoc,
+    rw add_comm (-p) (p),
+    rw add_neg,
+    rw add_zero,
+    rw mul_comm,
+    exact eq,
+  },
+have := pos_is_g0 a,
+rw this at a_pos,
+    sorry,
+  },
+ 
+end
+
 theorem gcd_pos: ∀ (a b : ZZ), is_positive (gcd a b) := begin
 intros a b,
 let d :ZZ := gcd a b,

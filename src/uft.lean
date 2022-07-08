@@ -12,7 +12,7 @@ variables {ZZ : Type} [Integers ZZ ]
 theorem WOP_Contradiction: 
   ∀ (proposition: ZZ → Prop),
   ( ∀(minimal: ZZ), ∃(smaller: ZZ),
-  ¬proposition(minimal) → ¬proposition(smaller) 
+  ¬proposition(minimal)  → ¬proposition(smaller) 
   ∧ smaller < minimal ) → (∀ (x : ZZ), 
   proposition(x)) 
   := begin
@@ -27,6 +27,7 @@ theorem WOP_Contradiction:
   cases rest with nminimal other,
   have smaller := holds_for_smaller minimal,
   cases smaller with smaller smallereq,
+  -- cases smallereq with a _,
   have contra := smallereq nminimal,
   cases contra with not_smaller smaller_lt_minimal,
   -- cases smallereq with _ smaller_lt_minimal,
@@ -131,30 +132,7 @@ rw ← olex,
 exact zlt1,
 end
 
-theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
-  intros a b a_pos b_pos a_div_b,
-  rw divs at a_div_b,
-  cases a_div_b with p eq,{
- have p_pos  := pos_div_pos a b p a_pos b_pos eq,
 
-  have eq : p*(a-1) +p = b,{
-    rw subtr,
-    rw mul_add ,
-    rw mul_comm p (-1),
-    rw mul_neg_one,
-    rw add_assoc,
-    rw add_comm (-p) (p),
-    rw add_neg,
-    rw add_zero,
-    rw mul_comm,
-    exact eq,
-  },
-have := pos_is_g0 a,
-rw this at a_pos,
-    sorry,
-  },
- 
-end
 
 theorem gcd_pos: ∀ (a b : ZZ), is_positive (gcd a b) := begin
 intros a b,
@@ -293,12 +271,61 @@ rw ←  not_le_ge at h,
 push_neg at h,
 exact h,
 end,
-have  := nibzo,
+-- apply NIBZO,
+have nib := NIBZO,
+apply nib,
+use x,
+
+split,{
+  exact this,
+-- sorry,
+},
+exact t,
+-- sorry,
 -- have := not_le_ge,
 -- have := ne_ge
-sorry,
+-- sorry,
+-- sorry,
 end
 
+theorem divs_le: ∀ (a b: ZZ ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
+  intros a b a_pos b_pos a_div_b,
+  rw divs at a_div_b,
+  cases a_div_b with p eq,{
+ have p_pos  := pos_div_pos a b p a_pos b_pos eq,
+
+  have eq : p*(a-1) +p = b,{
+    rw subtr,
+    rw mul_add ,
+    rw mul_comm p (-1),
+    rw mul_neg_one,
+    rw add_assoc,
+    rw add_comm (-p) (p),
+    rw add_neg,
+    rw add_zero,
+    rw mul_comm,
+    exact eq,
+  },
+have := pos_is_g0 a,
+-- rw this at a_pos,
+have g := posge1 a a_pos,
+rw less_eq at g,
+cases g, {
+  rw less_than at g,
+
+  cases g,{
+rw less_eq,
+left,
+rw less_than,
+use p,
+sorry,
+  },
+-- sorry,
+},
+    sorry,
+  },
+ 
+end
 theorem pos_iff_le_one: ∀(a :ZZ), is_positive a ↔ 1 ≤ a := begin
 intro a,
 split,{
@@ -1271,7 +1298,14 @@ split,{
   exact nminimal,
   end,
   have thing := cp_nminimal (div_self minimal),
-  have bruh := composite_has_fact minimal,
+  have pos_min: is_positive minimal := sorry,
+
+  have bruh := composite_has_fact minimal pos_min thing,
+cases bruh with d deq,{
+
+  rcases deq with ⟨ a,b,c⟩, 
+sorry,
+},
 
 
 -- change ()

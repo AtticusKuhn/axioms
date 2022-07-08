@@ -1362,10 +1362,26 @@ have wc := WOP_Contradiction WOP_prop,
 have inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) :=
 begin
 intros minimal,
+  have prime_fac_min := All_Integers_Have_Prime_Factor minimal,
+     cases prime_fac_min with p pdivs,
+
+  cases pdivs with p_is_prime p_divides_minimal,
+    rw divs at p_divides_minimal,
+cases p_divides_minimal with c cp_eq_min,
+use c,
+-- split, {
+
+
+
+-- sorry,
+-- },
+sorry,
+-- sorry,
+-- sorry,
 -- split,{
 -- have prime_fac_min := All_Integers_Have_Prime_Factor min,
    
-sorry,
+-- sorry,
 --  },
 
   -- cases prime_fac_min with p pdivs,

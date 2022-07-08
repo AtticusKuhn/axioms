@@ -1354,10 +1354,10 @@ exact w,
 end
 def all_prime_list: list ZZ → Prop
   | [] := true
-  | (x :: xs) := true.
-theorem All_Integers_Have_Prime_Repr' : ∀(x:ZZ), ∃(l: list ZZ), (all_prime_list l) → list.prod l = x:=
+  | (x :: xs) := is_prime x ∧ all_prime_list xs.
+theorem All_Integers_Have_Prime_Repr' : ∀(x:ZZ), ∃(l: list ZZ), (all_prime_list l) ∧   list.prod l = x:=
  begin
-     let WOP_prop : ZZ → Prop := λ x,  ∃(l: list ZZ), (all_prime_list l) → list.prod l  = x,
+     let WOP_prop : ZZ → Prop := λ x,  ∃(l: list ZZ), (all_prime_list l) ∧  list.prod l  = x,
 have wc := WOP_Contradiction WOP_prop,
 have inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) :=
 begin
@@ -1369,6 +1369,31 @@ intros minimal,
     rw divs at p_divides_minimal,
 cases p_divides_minimal with c cp_eq_min,
 use c,
+intro npmin,
+split, {
+  intros nc,
+  apply npmin,
+  cases nc with clist cprod,
+  cases cprod with allprimec cprod,
+  -- let new_list: list ZZ := p :: clist,
+  use (p :: clist),
+split,{
+rw all_prime_list,
+exact ⟨ p_is_prime,allprimec⟩, 
+-- sorry,
+},
+rw list.prod,
+rw   list.foldl,
+simp,
+-- rw  ←  list.foldl,
+
+-- rw list.foldl,
+
+-- rw list.foldl,
+
+-- rw li
+sorry,
+},
 -- split, {
 
 

@@ -1304,6 +1304,7 @@ split,{
 cases bruh with d deq,{
 
   rcases deq with ⟨ a,b,c⟩, 
+  
 sorry,
 },
 

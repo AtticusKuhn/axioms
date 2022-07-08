@@ -3,6 +3,7 @@ import .set_1
 import tactic.basic
 import init.default
 import logic.basic
+-- import data.list
 -- import tactic
 open myRing
 variables {R : Type} [myRing R]
@@ -1189,6 +1190,9 @@ intro a,
 exact h,
 end
 
+def x : list ZZ := [2,2]
+-- def product_of_list
+
 theorem EuclidsLemma: ∀ (f : ZZ → ZZ), ∀(p n:ZZ), is_prime p → (∀ (x:ZZ), is_positive (f x)) →  p ∣ (pi 0 n f) → (∃(k:ZZ), p ∣ (f k)) := begin
 intros f p n prime_p always_pos p_div_pi,
   let WOP_prop : ZZ → Prop := λ n, p ∣ (pi 0 n f) →   (∃ (k : ZZ), (p ∣ f k)),
@@ -1348,6 +1352,42 @@ end,
   have w := wop_contra wop_inside  x,
 exact w,
 end
+def all_prime_list: list ZZ → Prop
+  | [] := true
+  | (x :: xs) := true.
+theorem All_Integers_Have_Prime_Repr' : ∀(x:ZZ), ∃(l: list ZZ), (all_prime_list l) → list.prod l = x:=
+ begin
+     let WOP_prop : ZZ → Prop := λ x,  ∃(l: list ZZ), (all_prime_list l) → list.prod l  = x,
+have wc := WOP_Contradiction WOP_prop,
+have inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) :=
+begin
+intros minimal,
+-- split,{
+-- have prime_fac_min := All_Integers_Have_Prime_Factor min,
+   
+sorry,
+--  },
+
+  -- cases prime_fac_min with p pdivs,
+
+  -- cases pdivs with p_is_prime p_divides_minimal,
+    -- rw divs at p_divides_minimal,
+-- sorry,
+-- sorry,
+-- sorry,
+-- sorry,
+end,
+intros x,
+exact wc inside x,
+
+--  intros x ,
+-- --  split w,
+-- split,{
+
+-- sorry,
+-- },
+--   sorry,
+  end
 theorem All_Integers_Have_Prime_Repr: ∀(x:ZZ), ∃ (f:ZZ → ZZ),∃(n:ZZ), (∀ (i:ZZ), is_prime (f i) ) → pi 0 n f = x := begin
 intros x,
     let WOP_prop : ZZ → Prop := λ x,  ∃ (f:ZZ → ZZ),∃(n:ZZ), (∀ (i:ZZ), is_prime (f i) ) → pi 0 n f = x ,
@@ -1369,6 +1409,12 @@ cases p_divides_minimal with c cp_eq_min,
 by_contradiction,
 apply nmin,
 rcases h with  ⟨f, n, all⟩, 
+  -- let my_fun : ZZ → ZZ := λ n( if n==0 then 0 else 1),
+
+-- let g : (x:ZZ) → ZZ :=  if 
+--   t : x=0 
+--   then 
+--   0 else x,
 -- let g (x : ZZ) : ZZ
 --   | g 0 := p
 --   | g x := f x

@@ -41,6 +41,49 @@ theorem WOP_Contradiction:
       apply no_lt_self smaller,
 exact smaller_lt_minimal,
 end 
+theorem not_le_ge: ∀{a b : O}, (¬ (a < b)) ↔ ( b ≤ a):=
+begin
+  intros a b,
+  split,
+  {
+    intro ab,
+    cases trichotomy_lt a b,
+    {
+      exfalso,
+      apply ab,
+      exact h.1,  
+    },
+    cases h,
+    {
+      rw h.2.1,
+      rw less_eq,
+      right,
+      refl,
+    },
+    {
+      rw less_eq,
+      left,
+      exact h.2.2,
+    }
+  },
+  {
+    intros ba h,
+    --rw less_than at h,
+    rw less_eq at ba,
+    cases ba,
+    {
+      have := trans_lt h ba,
+      apply no_lt_self a,
+      exact this,
+    },
+    {
+      rw
+      ba at h,
+      apply no_lt_self a,
+      exact h,
+    },
+  }
+end
 theorem pos_is_g0: ∀ (x:O), is_positive x ↔ 0< x := begin
 intros a,
 split, {
@@ -86,14 +129,6 @@ exact this,
 },
 rw ← olex,
 exact zlt1,
-end
-theorem posge1: ∀ (x:ZZ),  is_positive x → 1 ≤ x := begin 
-intros x posx,
-rw less_eq,
-have :=pos_is_g0 x,
-cases this,
-have := this_mp posx,
-sorry,
 end
 
 theorem divs_le: ∀ (a b: O ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
@@ -246,6 +281,24 @@ theorem NIBZO: ¬ (∃ (x:ZZ), nibzo(x)) := begin
   exact smaller,
   },
 end
+theorem posge1: ∀ (x:ZZ),  is_positive x → 1 ≤ x := begin 
+intros x posx,
+-- rw less_eq,
+have :=pos_is_g0 x,
+cases this,
+have := this_mp posx,
+by_contradiction,
+have t: x < 1 := begin
+rw ←  not_le_ge at h,
+push_neg at h,
+exact h,
+end,
+have  := nibzo,
+-- have := not_le_ge,
+-- have := ne_ge
+sorry,
+end
+
 theorem pos_iff_le_one: ∀(a :ZZ), is_positive a ↔ 1 ≤ a := begin
 intro a,
 split,{
@@ -357,49 +410,7 @@ begin
     exact paq.2,
   }
 end
-theorem not_le_ge: ∀{a b : O}, (¬ (a < b)) ↔ ( b ≤ a):=
-begin
-  intros a b,
-  split,
-  {
-    intro ab,
-    cases trichotomy_lt a b,
-    {
-      exfalso,
-      apply ab,
-      exact h.1,  
-    },
-    cases h,
-    {
-      rw h.2.1,
-      rw less_eq,
-      right,
-      refl,
-    },
-    {
-      rw less_eq,
-      left,
-      exact h.2.2,
-    }
-  },
-  {
-    intros ba h,
-    --rw less_than at h,
-    rw less_eq at ba,
-    cases ba,
-    {
-      have := trans_lt h ba,
-      apply no_lt_self a,
-      exact this,
-    },
-    {
-      rw
-      ba at h,
-      apply no_lt_self a,
-      exact h,
-    },
-  }
-end
+
 lemma refl_le : ∀(a: O), a ≤ a :=
 begin 
   intro a,

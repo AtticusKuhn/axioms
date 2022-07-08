@@ -1314,7 +1314,7 @@ sorry,
 -- apply nminimal,
 -- exact (div_self minimal),
 -- have x :=not_min minimal,
-sorry,
+-- sorry,
 
 -- sorry,
 --   cases nminimal, {

@@ -13,7 +13,7 @@ variables {ZZ : Type} [Integers ZZ ]
 theorem WOP_Contradiction: 
   ∀ (proposition: ZZ → Prop),
   ( ∀(minimal: ZZ), ∃(smaller: ZZ),
-  ¬proposition(minimal)  → ¬proposition(smaller) 
+  (¬proposition(minimal))∧ (is_positive minimal)  → ¬proposition(smaller) 
   ∧ smaller < minimal ) → (∀ (x : ZZ), 
   proposition(x)) 
   := begin
@@ -24,15 +24,19 @@ theorem WOP_Contradiction:
   use all,
   end,
   have wop_holds := wop wopsome,
-  cases wop_holds with minimal rest,
-  cases rest with nminimal other,
+  rcases wop_holds with ⟨ minimal,not_prop_minimal,positive_minimal,others_smaller⟩, 
+  -- cases wop_holds with minimal rest,
+  -- cases rest with nminimal other,
+
   have smaller := holds_for_smaller minimal,
-  cases smaller with smaller smallereq,
+  rcases smaller with ⟨ smaller,smaller_eq⟩ ,
+  -- cases smaller with smaller smallereq,
+
   -- cases smallereq with a _,
-  have contra := smallereq nminimal,
+  have contra := smaller_eq ⟨ not_prop_minimal, positive_minimal ⟩ ,
   cases contra with not_smaller smaller_lt_minimal,
   -- cases smallereq with _ smaller_lt_minimal,
-  have min_le_smaller := other smaller not_smaller,
+  have min_le_smaller := others_smaller smaller not_smaller,
   rw less_eq at min_le_smaller,
   cases min_le_smaller, {
     have tr := trans_lt smaller_lt_minimal min_le_smaller,
@@ -319,6 +323,7 @@ rw less_eq,
 left,
 rw less_than,
 use p,
+
 sorry,
   },
 -- sorry,
@@ -327,6 +332,7 @@ sorry,
   },
  
 end
+
 theorem pos_iff_le_one: ∀(a :ZZ), is_positive a ↔ 1 ≤ a := begin
 intro a,
 split,{
@@ -1197,14 +1203,15 @@ theorem EuclidsLemma: ∀ (f : ZZ → ZZ), ∀(p n:ZZ), is_prime p → (∀ (x:Z
 intros f p n prime_p always_pos p_div_pi,
   let WOP_prop : ZZ → Prop := λ n, p ∣ (pi 0 n f) →   (∃ (k : ZZ), (p ∣ f k)),
   have wop_contra := WOP_Contradiction WOP_prop,
-  have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
+
+  have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal∧ is_positive minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
   -- assume there is some minimal m for which Euclid's Lemma Doesn't Hold
   intros minimal,
   -- we are going to show that Euclid's Lemma doesn't hold for m-1
   use (minimal-1),
   -- introduce the proposition that Euclid's Lemma doesn't hold on m
     intros nminimal,
-
+cases nminimal with nminimal _,
      have x := IHateLogic nminimal,
      rw push_not_exists at x,
      rw pi_diff at x,
@@ -1289,10 +1296,12 @@ theorem All_Integers_Have_Prime_Factor: ∀(x:ZZ), ∃ (p:ZZ), (is_prime p ∧  
   intros x,
     let WOP_prop : ZZ → Prop := λ x, ∃(p:ZZ), is_prime p ∧  p ∣ x,
   have wop_contra := WOP_Contradiction WOP_prop,
-  have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
+  have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal ∧ is_positive minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
   intros minimal,
+
 split,{
   intro not_min,
+  cases not_min with not_min mins_pos,
   change (¬  (∃(p:ZZ), is_prime p ∧ p ∣ minimal)) at not_min,
   rw push_not_exists at not_min,
   have nminimal := not_min minimal,
@@ -1302,7 +1311,7 @@ split,{
   exact nminimal,
   end,
   have thing := cp_nminimal (div_self minimal),
-  have pos_min: is_positive minimal := sorry,
+  have pos_min: is_positive minimal := mins_pos,
 
   have bruh := composite_has_fact minimal pos_min thing,
 cases bruh with d deq,{
@@ -1310,6 +1319,7 @@ cases bruh with d deq,{
   rcases deq with ⟨ a,b,c⟩, 
   rw divs at a,
   rcases a with  ⟨ divisor, divides⟩ ,
+
 split,{
   have br : ¬WOP_prop divisor := begin
 
@@ -1352,14 +1362,17 @@ end,
   have w := wop_contra wop_inside  x,
 exact w,
 end
+def product: list ZZ → ZZ 
+  | [] :=1
+  | (x :: xs) := x * (product xs)
 def all_prime_list: list ZZ → Prop
   | [] := true
   | (x :: xs) := is_prime x ∧ all_prime_list xs.
-theorem All_Integers_Have_Prime_Repr' : ∀(x:ZZ), ∃(l: list ZZ), (all_prime_list l) ∧   list.prod l = x:=
+theorem All_Integers_Have_Prime_Repr' : ∀(x:ZZ), ∃(l: list ZZ), (all_prime_list l) ∧   product l = x:=
  begin
-     let WOP_prop : ZZ → Prop := λ x,  ∃(l: list ZZ), (all_prime_list l) ∧  list.prod l  = x,
+     let WOP_prop : ZZ → Prop := λ x,  ∃(l: list ZZ), (all_prime_list l) ∧  product l  = x,
 have wc := WOP_Contradiction WOP_prop,
-have inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) :=
+have inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal ∧ (is_positive minimal) → ¬WOP_prop smaller ∧ smaller < minimal) :=
 begin
 intros minimal,
   have prime_fac_min := All_Integers_Have_Prime_Factor minimal,
@@ -1372,126 +1385,26 @@ use c,
 intro npmin,
 split, {
   intros nc,
+  cases npmin with npmin min_positive,
   apply npmin,
   cases nc with clist cprod,
   cases cprod with allprimec cprod,
-  -- let new_list: list ZZ := p :: clist,
   use (p :: clist),
 split,{
 rw all_prime_list,
 exact ⟨ p_is_prime,allprimec⟩, 
--- sorry,
 },
-rw list.prod,
-rw   list.foldl,
-simp,
-rw ←  cp_eq_min,
-rw ←  cprod,
-rw list.prod,
--- let := list.foldl (*) p clist,
--- sorry,
+rw product,
+rw cprod,
+exact cp_eq_min,
 
--- rw  ←  list.foldl,
-
--- rw list.foldl,
-
--- rw list.foldl,
-
--- rw li
-sorry,
 },
--- split, {
+have smaller := divs_le c minimal,
 
-
-
--- sorry,
--- },
 sorry,
--- sorry,
--- sorry,
--- split,{
--- have prime_fac_min := All_Integers_Have_Prime_Factor min,
-   
--- sorry,
---  },
 
-  -- cases prime_fac_min with p pdivs,
-
-  -- cases pdivs with p_is_prime p_divides_minimal,
-    -- rw divs at p_divides_minimal,
--- sorry,
--- sorry,
--- sorry,
--- sorry,
 end,
 intros x,
 exact wc inside x,
 
---  intros x ,
--- --  split w,
--- split,{
-
--- sorry,
--- },
---   sorry,
   end
-theorem All_Integers_Have_Prime_Repr: ∀(x:ZZ), ∃ (f:ZZ → ZZ),∃(n:ZZ), (∀ (i:ZZ), is_prime (f i) ) → pi 0 n f = x := begin
-intros x,
-    let WOP_prop : ZZ → Prop := λ x,  ∃ (f:ZZ → ZZ),∃(n:ZZ), (∀ (i:ZZ), is_prime (f i) ) → pi 0 n f = x ,
-
- have wop_contra := WOP_Contradiction WOP_prop,
-  have wop_inside: (∀ (minimal : ZZ), ∃ (smaller : ZZ), ¬WOP_prop minimal → ¬WOP_prop smaller ∧ smaller < minimal) := begin
-  intros min,
-  have prime_fac_min := All_Integers_Have_Prime_Factor min,
-  cases prime_fac_min with p pdivs,
-  cases pdivs with p_is_prime p_divides_minimal,
-    rw divs at p_divides_minimal,
-cases p_divides_minimal with c cp_eq_min,
-  use c,
-  intro nmin,
-      change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = min)) at nmin,
-      split,{
-            change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = c)),
-
-by_contradiction,
-apply nmin,
-rcases h with  ⟨f, n, all⟩, 
-  -- let my_fun : ZZ → ZZ := λ n( if n==0 then 0 else 1),
-
--- let g : (x:ZZ) → ZZ :=  if 
---   t : x=0 
---   then 
---   0 else x,
--- let g (x : ZZ) : ZZ
---   | g 0 := p
---   | g x := f x
--- use f,
--- use n,
-
--- split,{
---   split, {
---     intro thing,
-
--- sorry,
---   },
--- sorry,
--- },
-sorry,
--- sorry,
-      },
-
-  sorry,
---   split, {
---     intros nmin,
---     change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = min)) at nmin,
---     rw push_neg.not_exists_eq at nmin,
---     -- rw push_neg.not_exists_eq at nmin,
---     -- change  (¬ (∃ (f : ZZ → ZZ) (n : ZZ), (∀ (i : ZZ), is_prime (f i)) → pi 0 n f = ?m_1)) at nmin,
-
--- sorry,
---   },
--- sorry,
-end,
-  have w := wop_contra wop_inside  x,
-exact w,
-end

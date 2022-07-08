@@ -30,24 +30,26 @@ class myRing (R : Type) extends has_group_notation R :=
 namespace myRing
   variables {R : Type} [myRing R]
   class ordered_ring (R  : Type) extends myRing R, has_lt R, has_le R
+  variables { O : Type} [ordered_ring O ]
+
+  axiom is_positive : (O) → Prop 
+
   class Integers (ZZ  : Type) extends   ordered_ring ZZ :=
     (WOP : ∀(proposition : ZZ → Prop), 
     ((∃ (some:ZZ), 
     proposition(some)) → (
       ∃(minimal : ZZ), 
-      proposition(minimal) ∧ 
+      proposition(minimal) ∧ is_positive(minimal) ∧ 
       ∀(other:ZZ), 
       proposition(other)→ minimal ≤ other
     )))
 
 
-  variables { O : Type} [ordered_ring O ]
   variables { ZZ : Type} [Integers ZZ ]
 
  
 
   /-hacky way to define propositions as a black box -/
-  axiom is_positive : (O) → Prop 
   axiom explicit_WOP: ∀(proposition : ZZ → Prop), 
     (∃ (some:ZZ), 
     proposition(some)) → (

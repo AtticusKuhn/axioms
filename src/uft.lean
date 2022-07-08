@@ -1385,6 +1385,12 @@ exact ⟨ p_is_prime,allprimec⟩,
 rw list.prod,
 rw   list.foldl,
 simp,
+rw ←  cp_eq_min,
+rw ←  cprod,
+rw list.prod,
+-- let := list.foldl (*) p clist,
+-- sorry,
+
 -- rw  ←  list.foldl,
 
 -- rw list.foldl,

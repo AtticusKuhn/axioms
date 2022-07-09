@@ -56,6 +56,15 @@ lemma right_cancel: ∀ {a b c : R}, b+a=c+a → b=c := begin
   end,
   exact this,
 end
+@[simp]
+lemma right_cancel_simp: ∀ {a b c : R}, b+a=c+a ↔ b=c := begin
+  intros a b c,
+  split,{
+    exact right_cancel,
+  },
+  intro bc,
+  rw bc,
+end
 
 /- anything times zero is zero -/
 
@@ -744,7 +753,36 @@ rw mul_comm a x,
 rw add_assoc,
 exact eq3,
 end
-
+@[simp]
+theorem add_lt_add : ∀(a b x : O), 
+  a+x < b+x ↔
+  a  < b :=
+begin
+intros a b c,
+split,{
+  intro eq,
+  rw less_than at eq,
+  rcases eq with ⟨ w,x,y⟩,
+  rw add_comm at y,
+  rw ←  add_assoc  at y,
+  simp at y,
+  rw less_than,
+  use w,
+  rw add_comm,
+  rw y,
+  exact ⟨ x,refl b⟩, 
+},
+intro x,
+rw less_than,
+rw less_than at x,
+rcases x with ⟨f,g,h ⟩,
+use f,
+rw ← h, 
+rw add_assoc a f c,
+rw add_comm f c,
+rw ← add_assoc,
+exact ⟨g, refl (a+c+f) ⟩, 
+end
 /- If a is positive then it isn't zero -/
 lemma pos_not_zero: ∀ {a : O}, is_positive a → a ≠ 0 := begin
   intros a b,

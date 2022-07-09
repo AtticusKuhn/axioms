@@ -9,7 +9,13 @@ open myRing
 variables {R : Type} [myRing R]
 variables {O : Type} [ordered_ring O ]
 variables {ZZ : Type} [Integers ZZ ]
-
+theorem sub_both_lt: ∀(a b x: O), ((a -x <  b-x)) ↔ ( a < b):=
+begin
+intros a b x,
+rw subtr,
+rw subtr,
+exact add_lt_add (a) (b) (-x),
+end
 theorem WOP_Contradiction: 
   ∀ (proposition: ZZ → Prop),
   ( ∀(minimal: ZZ), ∃(smaller: ZZ),
@@ -293,45 +299,6 @@ exact t,
 -- sorry,
 end
 
-theorem divs_le: ∀ (a b: ZZ ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
-  intros a b a_pos b_pos a_div_b,
-  rw divs at a_div_b,
-  cases a_div_b with p eq,{
- have p_pos  := pos_div_pos a b p a_pos b_pos eq,
-
-  have eq : p*(a-1) +p = b,{
-    rw subtr,
-    rw mul_add ,
-    rw mul_comm p (-1),
-    rw mul_neg_one,
-    rw add_assoc,
-    rw add_comm (-p) (p),
-    rw add_neg,
-    rw add_zero,
-    rw mul_comm,
-    exact eq,
-  },
-have := pos_is_g0 a,
--- rw this at a_pos,
-have g := posge1 a a_pos,
-rw less_eq at g,
-cases g, {
-  rw less_than at g,
-
-  cases g,{
-rw less_eq,
-left,
-rw less_than,
-use p,
-
-sorry,
-  },
--- sorry,
-},
-    sorry,
-  },
- 
-end
 
 theorem pos_iff_le_one: ∀(a :ZZ), is_positive a ↔ 1 ≤ a := begin
 intro a,
@@ -380,6 +347,49 @@ exact pp,
 },
 rw ← r,
 exact one_pos,
+end
+
+theorem divs_le: ∀ (a b: ZZ ), is_positive a  → is_positive b → a ∣ b → a ≤ b := begin
+  intros a b a_pos b_pos a_div_b,
+  rw divs at a_div_b,
+  cases a_div_b with p eq,{
+ have p_pos  := pos_div_pos a b p a_pos b_pos eq,
+
+  have eq : p*(a-1) +p = b,{
+    rw subtr,
+    rw mul_add ,
+    rw mul_comm p (-1),
+    rw mul_neg_one,
+    rw add_assoc,
+    rw add_comm (-p) (p),
+    rw add_neg,
+    rw add_zero,
+    rw mul_comm,
+    exact eq,
+  },
+have := pos_is_g0 a,
+-- rw this at a_pos,
+have g := posge1 a a_pos,
+rw less_eq at g,
+cases g, {
+  rw less_than at g,
+
+  cases g,{
+rw less_eq,
+left,
+rw less_than,
+
+-- use p,
+
+sorry,
+  },
+
+-- sorry,
+},
+
+    sorry,
+  },
+ 
 end
 theorem le_le_eq: ∀( a b: O), a ≤ b → b ≤ a → a = b := begin
   intros d min d_le_min min_le_d,
@@ -452,10 +462,7 @@ begin
   right, 
   refl,
 end
-theorem sub_both_lt: ∀(a b x: O), ((a <  b)) ↔ ( a-x < b-x):=
-begin
-sorry,
-end
+
 theorem min_1_lt_self: ∀ (x: O), x-1 < x := begin
 intro x,
 rw less_than,
@@ -1292,6 +1299,21 @@ rcases trich with  ⟨a,b,c   ⟩  ,{
 -- sorry,
 end
 
+theorem prime_ge_1  : ∀ (p:ZZ), is_prime p → 1 < p :=
+begin
+intros p pprime,
+rw prime at pprime,
+rcases pprime with ⟨ ppos,pdivs⟩ ,
+rw pos_iff_le_one at ppos,
+rw less_eq at ppos,
+cases ppos,
+exact ppos,
+by_contradiction,
+rw not_le_ge at h,
+
+-- have := pdivs 1 one_pos (div_one p),
+sorry,
+end
 theorem All_Integers_Have_Prime_Factor: ∀(x:ZZ), ∃ (p:ZZ), (is_prime p ∧  p ∣ x) := begin
   intros x,
     let WOP_prop : ZZ → Prop := λ x, ∃(p:ZZ), is_prime p ∧  p ∣ x,
@@ -1399,7 +1421,24 @@ rw cprod,
 exact cp_eq_min,
 
 },
-have smaller := divs_le c minimal,
+have ppos : is_positive p, {
+  rw prime at p_is_prime,
+  cases p_is_prime,
+  exact p_is_prime_left,
+},
+cases npmin with npmin minpos,
+
+have cpos: is_positive c, {
+exact pos_div_pos p minimal c ppos minpos cp_eq_min,
+
+},
+have c_div_min: c ∣  minimal, {
+rw divs,
+use p,
+rw ←  cp_eq_min,
+rw mul_comm,
+},
+have smaller := divs_le c minimal cpos minpos c_div_min,
 
 sorry,
 
